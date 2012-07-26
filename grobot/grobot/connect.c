@@ -2,55 +2,25 @@
 #include "macrodef.h"
 
 
-static int g_current_connect_number = 0;
+static int              g_current_connect_number    =   0;
+static volatile int     g_max_select_fd             =   0;
 
-
-/* function: implementation */
-#ifdef WIN32
-
-static int con_initwin() {
-    WSADATA wsaData;
-
-    if (NO_ERROR!=WSAStartup(SOCKET_VERSION, &wsaData)) {
-        return -1;
+void con_set_maxfd(int fd) {
+    if (fd >= g_max_select_fd) {
+        g_max_select_fd = fd+1;
     }
-    return 0;
 }
-#endif /*WIN32*/
-
 
 int con_init_cconnect(cconnect *pcon, void *phost) {
     int iret=-1;
-    do {
-        if (NULL==pcon) {
-            record_ptr(phost);
-            break;
-        }
-
+    if (NULL!=pcon) {
         memset(pcon, 0, sizeof(cconnect));
-/*
-        iret = log_init_log(&pcon->log, "f:\\log.txt");
-        if (0>iret) {
-            printf("Error: create log file, in function %s:%s, at line: %d\n",
-                __FILE__, __FUNCTION__, __LINE__);
-            break;
-        }
-*/
+
         pcon->p_host = phost;
         pcon->n_nonblock   = 1;
         pcon->n_index = g_current_connect_number++;
-/*
-#ifdef WIN32
-        iret = con_initwin();
-        if (0>iret) {
-            record_ifo(pcon->p_host, "select socket dll version error");
-            break;
-        }
-#endif
-        */
         iret = 0;
-    } while (0);
-
+        }
     return iret;
 }
 
@@ -113,41 +83,32 @@ int con_create_tcp(cconnect *pcon) {
 
     do {
         iret = -1;
-        record_ifo(pcon->p_host, "start tcp client");
         if (NULL==pcon){
-            record_ptr(pcon->p_host);
             break;
         }
 
-        record_ifo(pcon->p_host, "create socket");
         pcon->n_sockfd = socket(pcon->n_domain, pcon->n_type, 0);
         if (0>pcon->n_sockfd) {
-            record_ret(pcon->p_host);
             break;
         }
 
-        record_ifo(pcon->p_host, "bind local address and port");
+        con_set_maxfd(pcon->n_sockfd);
         iret = bind(pcon->n_sockfd, (const struct sockaddr *)&pcon->sa_loc,
             sizeof(struct sockaddr));
         if (0>iret) {
-            record_ret(pcon->p_host);
             break;
         }
 
-        record_ifo(pcon, "start connect");
         iret = connect(pcon->n_sockfd, (const struct sockaddr *)&pcon->sa_dst,
             sizeof(struct sockaddr));
         if (0>iret) {
-            record_ret(pcon->p_host);
             break;
         }
 
         iret = con_set_block(pcon, -1);
         if (0>iret) {
-            record_ret(pcon->p_host);
             break;
         }
-        record_ifo(pcon->p_host, "connect start successed");
     } while (0);
 
     return iret;

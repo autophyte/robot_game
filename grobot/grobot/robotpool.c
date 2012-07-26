@@ -11,8 +11,12 @@
 #define SERVERPORT      2208
 
 int pool_init(robotpool *ppool) {
+    int i;
     if (NULL!=ppool) {
         memset(ppool, 0, sizeof(robotpool));
+        for (i=0; i<MAX_CLIENT; ++i) {
+            ppool->valids[i]=1;
+        }
         ppool->ids = 0;
         ppool->ncount = 0;
         return 0;
@@ -64,6 +68,7 @@ int pool_create_robot(robotpool *ppool) {
         if (0>iret) {
             break;
         }
+        ppool->valids[ifree] = 0;
     } while (0);
 
     return iret;

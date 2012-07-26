@@ -90,5 +90,10 @@
 #define unused(ret) do {\
 } while (0)
 
+/** @def get_host
+ * 根据成员变量的指获其宿主变量的指针
+ */
+#define get_host(ptr, type, member) \
+    ((type *)((char *)(ptr)-(unsigned long)(&((type *)0)->member)))
 
 #endif

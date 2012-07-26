@@ -85,6 +85,7 @@
   <ItemGroup>
     <ClCompile Include="connect.c" />
     <ClCompile Include="loger.c" />
+    <ClCompile Include="robot.c" />
     <ClCompile Include="robotpool.c" />
     <ClCompile Include="robots.c" />
   </ItemGroup>

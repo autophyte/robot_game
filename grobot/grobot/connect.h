@@ -146,4 +146,13 @@ int con_rcv_msg(cconnect *pcon, void *pmsg, int *plen);
  * @retval -1 函数运行失败
  */
 int con_create_tcp(cconnect *p_con);
+
+/**
+ * 设置select的最大的fd号
+ *
+ * @param[in] fd 要根全局数比较的fd号
+ *
+ * @note 这个函数因为会更改全局变量的值，只在在主线程中调用，其它线程中只读全局变量
+ */
+void con_set_maxfd(int fd);
 #endif /* _CONNECT_H_ */
