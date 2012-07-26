@@ -79,10 +79,12 @@
     <ClInclude Include="connect.h" />
     <ClInclude Include="loger.h" />
     <ClInclude Include="macrodef.h" />
+    <ClInclude Include="robots.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="connect.c" />
     <ClCompile Include="loger.c" />
+    <ClCompile Include="robots.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -21,17 +21,17 @@ typedef struct _tag_loger loger;
 /**
  * 初始化日志文件
  */
-int log_init_log(loger *plog, const char *sz_filename);
+int log_init_log(void *probot, const char *sz_filename);
 
 /**
  * 结束日志文件
  */
-int log_end_log(loger *plog);
+int log_end_log(void *probot);
 
 /**
  * 记录日志文件
  */
-int log_record(loger *plog, const char *fmt, ...)
+int log_record(void *probot, const char *fmt, ...)
     __attribute__((format(printf,2,3)));
 #endif /*_LOGER_H_*/
 

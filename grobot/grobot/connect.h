@@ -29,6 +29,7 @@ struct __tag_cconnect {
     int n_status;                   /**< 状态，0：未连接，1：已经连接 */
     int n_nonblock;                 /**< 非阻塞标志，1：非阻塞，0阻塞 */
     /* other */
+    void *p_host;                   /**< 所在结构体的指针 */
     loger log;                      /**< 日志 */
     int n_index;                    /**< connect编号 */
 };
@@ -48,14 +49,15 @@ unsigned short con_getport_loc();
 /**
  * 初始化cconnect变量
  *
- * @param[out] p_con 需要初始化的cconnect变量的指针
+ * @param[out] pcon 需要初始化的cconnect变量的指针
+ * @param[in] phost 设定宿主的指针，即cconnect变量所在结构体指针
  *
  * @retval 0 成功
  * @retval -1 初始化失败，可能是指针为空，或获取日志文件名出错，或创建log文件失败
  *
  * @note 每个connect变量都需要这个函数初始化后方能使用
  */
-int con_init_cconnect(cconnect *p_con);
+int con_init_cconnect(cconnect *pcon, void *phost);
 
 
 /**

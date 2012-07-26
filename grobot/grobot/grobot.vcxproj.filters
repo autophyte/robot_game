@@ -24,12 +24,18 @@
     <ClInclude Include="macrodef.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="robots.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="connect.c">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="loger.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="robots.c">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

@@ -59,29 +59,29 @@
 /**
  * 记录是志：指针为空
  */
-#define record_ptr(pcon) do {\
+#define record_ptr(phost) do {\
     printf("Error: NULL==ptr in function %s:%s, at line: %d\n",\
     __FILE__, __FUNCTION__, __LINE__);\
-    log_record(&pcon->log, "Error: NULL==ptr in function %s:%s, at line: %d\n",\
+    log_record(phost, "Error: NULL==ptr in function %s:%s, at line: %d\n",\
     __FILE__, __FUNCTION__, __LINE__);\
 } while (0)
 
 /**
  * 记录是志：返回值为-1
  */
-#define record_ret(pcon) do {\
+#define record_ret(phost) do {\
     printf("Error: -1==ret in function %s:%s, at line: %d\n",\
     __FILE__, __FUNCTION__, __LINE__);\
-    log_record(&pcon->log, "Error: NULL==ptr in function %s:%s, at line: %d\n",\
+    log_record(phost, "Error: NULL==ptr in function %s:%s, at line: %d\n",\
     __FILE__, __FUNCTION__, __LINE__);\
 } while (0)
 
 /**
  * 记录是志：将指定的参数记录
  */
-#define record_ifo(pcon, ret) do {\
+#define record_ifo(phost, ret) do {\
     printf(">>>>"##ret##"<<<<\n");\
-    log_record(&pcon->log, ">>>>"##ret##"<<<<\n");\
+    log_record(phost, ">>>>"##ret##"<<<<\n");\
 }while(0)
 
 /**
