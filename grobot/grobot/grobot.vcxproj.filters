@@ -32,8 +32,5 @@
     <ClCompile Include="loger.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="rbtree.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
   </ItemGroup>
 </Project>

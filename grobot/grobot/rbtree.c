@@ -7,14 +7,7 @@
 #define    RB_RED       0
 #define    RB_BLACK     1
 
-/**
- * 随机函数,用于生成一个0 - max-1的整数
- */
-int rand(int max) {
 
-    srand((unsigned) time(0));
-    return rand() % (max);
-}
 
 /**
  * 定义自己的entry，first是key，second是value
@@ -41,13 +34,13 @@ struct _tag_rb_node {
      */
     int weight;
 };
-typedef _tag_rb_node rb_node;
+typedef struct _tag_rb_node rb_node;
 
 struct _tag_rb_root {
-    struct _tag_rb_root *rb_node;
+    struct _tag_rb_node *rb_node;
     int size;
 };
-typedef _tag_rb_root rb_root;
+typedef struct _tag_rb_root rb_root;
 
 
 static void __rb_rotate_left(rb_node *node, rb_root *root) {
@@ -91,7 +84,7 @@ static void __rb_rotate_right(rb_node *node, rb_root *root) {
     int a, b, c;
     rb_node *left;
 
-    left = node->rb_left
+    left = node->rb_left;
     if (node->rb_right) {
         c = node->rb_right->weight;
     }

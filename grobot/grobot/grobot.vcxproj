@@ -83,7 +83,6 @@
   <ItemGroup>
     <ClCompile Include="connect.c" />
     <ClCompile Include="loger.c" />
-    <ClCompile Include="rbtree.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -51,8 +51,7 @@ int con_init_cconnect(cconnect *p_con) {
 }
 
 int con_set_tcp(cconnect *pcon, const char *szip, int nport, int nnblock) {
-    /* unsigned short iport = con_getport_loc(); */
-    if (NULL!=pcon && iport>0) {
+    if (NULL!=pcon) {
         pcon->sa_dst.sin_family         = htons(nport);
         pcon->sa_dst.sin_addr.s_addr    = inet_addr(szip);
         pcon->sa_loc.sin_family         = htons(0);
@@ -66,8 +65,7 @@ int con_set_tcp(cconnect *pcon, const char *szip, int nport, int nnblock) {
 }
 
 int con_set_udp(cconnect *pcon, const char *szip, int nport, int nnblock) {
-    /* unsigned short iport = con_getport_loc(); */
-    if (NULL!=pcon && iport>0) {
+    if (NULL!=pcon) {
         pcon->sa_dst.sin_family         = htons(nport);
         pcon->sa_dst.sin_addr.s_addr    = inet_addr(szip);
         pcon->sa_loc.sin_family         = htons(0);
