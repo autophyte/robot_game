@@ -27,6 +27,9 @@
     <ClInclude Include="robots.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="robotpool.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="connect.c">
@@ -37,6 +40,9 @@
     </ClCompile>
     <ClCompile Include="robots.c">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="robotpool.c">
+      <Filter>头文件</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

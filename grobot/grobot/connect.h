@@ -35,6 +35,7 @@ struct __tag_cconnect {
 };
 typedef struct __tag_cconnect cconnect;
 typedef cconnect *pconnect;
+typedef unsigned short ushort;
 
 
 /**
@@ -79,7 +80,7 @@ int con_init_cconnect(cconnect *pcon, void *phost);
  *
  * @see con_getport_loc con_set_udp con_create_tcp
  */
-int con_set_tcp(cconnect *pcon, const char *szip, int nport, int nnblock);
+int con_set_tcp(cconnect *pcon, const char *szip, ushort nport, int nnblock);
 
 
 /**

@@ -39,7 +39,7 @@ int con_init_cconnect(cconnect *pcon, void *phost) {
         pcon->p_host = phost;
         pcon->n_nonblock   = 1;
         pcon->n_index = g_current_connect_number++;
-
+/*
 #ifdef WIN32
         iret = con_initwin();
         if (0>iret) {
@@ -47,13 +47,14 @@ int con_init_cconnect(cconnect *pcon, void *phost) {
             break;
         }
 #endif
+        */
         iret = 0;
     } while (0);
 
     return iret;
 }
 
-int con_set_tcp(cconnect *pcon, const char *szip, int nport, int nnblock) {
+int con_set_tcp(cconnect *pcon, const char *szip, ushort nport, int nnblock) {
     if (NULL!=pcon) {
         pcon->sa_dst.sin_family         = htons(nport);
         pcon->sa_dst.sin_addr.s_addr    = inet_addr(szip);
@@ -113,7 +114,6 @@ int con_create_tcp(cconnect *pcon) {
     do {
         iret = -1;
         record_ifo(pcon->p_host, "start tcp client");
-
         if (NULL==pcon){
             record_ptr(pcon->p_host);
             break;
@@ -148,7 +148,6 @@ int con_create_tcp(cconnect *pcon) {
             break;
         }
         record_ifo(pcon->p_host, "connect start successed");
-        iret = 0;
     } while (0);
 
     return iret;
