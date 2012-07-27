@@ -123,3 +123,12 @@ int con_snd_msg(cconnect *pcon, void *pmsg, int nlen) {
     return iret;
 }
 
+int con_rcv_msg(cconnect *pcon, void *pmsg, int *plen) {
+    int iret=-1;
+    /*if (NULL!=pcon && NULL!=pmsg && *nlen>0 || *plen<PACKAGE_LEN){
+        iret = send(pcon->n_sockfd, pmsg, nlen, 0);
+    }*/
+
+    return iret;
+}
+

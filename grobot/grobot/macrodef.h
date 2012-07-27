@@ -91,9 +91,13 @@
 } while (0)
 
 /** @def get_host
- * 根据成员变量的指获其宿主变量的指针
+ * 根据成员变量的指针获其宿主变量的指针
+ *
+ * @param ptr 成员变量的指针
+ * @param type 宿主类型
+ * @param member 成员变量的名称
  */
-#define get_host(ptr, type, member) \
+#define container_of(ptr, type, member) \
     ((type *)((char *)(ptr)-(unsigned long)(&((type *)0)->member)))
 
 #endif

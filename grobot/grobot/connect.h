@@ -7,13 +7,13 @@
 #include <sys/types.h>
 #include <errno.h>
 #include <fcntl.h>
-#include <pthread.h>
 #else /*linux*/
 #include <WinSock2.h>
 #endif /*linux*/
 
 
 #include "loger.h"
+#include <pthread.h>
 
 
 /**

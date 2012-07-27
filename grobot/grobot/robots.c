@@ -1,4 +1,27 @@
 #include "robots.h"
+#include <pthread.h>
+
+
+
+void *rob_loop_l(void *ppar) {
+    robot *prob = (robot *)ppar;
+    if (NULL==prob) {
+        return;
+    }
+}
+
+int rob_start_l(robot *prob) {
+    pthread_t tid;
+    int iret=-1;
+    if (NULL!=prob) {
+        iret = pthread_create(&tid, NULL, rob_loop_l, (void *)prob);
+        if (0==iret) {
+            return 0;
+        }
+    }
+
+    return -1;
+}
 
 
 int rob_init(robot *prob, int ID, int idx, const char *ip, ushort port) {
@@ -36,6 +59,9 @@ int rob_init(robot *prob, int ID, int idx, const char *ip, ushort port) {
             record_ret((void *)prob);
             break;
         }
+
+        prob->mutex = PTHREAD_MUTEX_INITIALIZER;
+        prob->cond  = PTHREAD_COND_INITIALIZER;
     } while (0);
 
     return iret;
