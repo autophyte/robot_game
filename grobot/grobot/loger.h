@@ -11,28 +11,27 @@
 /**
  * 描述一个日志文件
  */
-struct _tag_loger
+struct loger
 {
     FILE *p_file;
     char sz_name[MAX_PATH];
 };
-typedef struct _tag_loger loger;
 
 /**
  * 初始化日志文件
  */
-int log_init_log(void *probot, const char *sz_filename);
+void log_loger(struct loger *plog, const char *sz_filename);
 
 /**
  * 结束日志文件
  */
-int log_end_log(void *probot);
+int log_end_log(struct loger *plog);
 
 /**
  * 记录日志文件
  */
-int log_record(void *probot, const char *fmt, ...)
-    __attribute__((format(printf,2,3)));
+int log_record(struct loger *plog, const char *fmt, ...)__attribute__(
+    (format(printf,2,3)));
 #endif /*_LOGER_H_*/
 
 

@@ -1,16 +1,23 @@
 #include "robots.h"
 #include <pthread.h>
 
-
+extern pthread_mutex_t g_mutex_exit;
+extern pthread_cond_t g_cond_exit;
+extern pthread_mutex_t g_mutex_rcv;
+extern pthread_cond_t g_cond_rcv;
 
 void *rob_loop_l(void *ppar) {
-    robot *prob = (robot *)ppar;
+    int iret;
+    struct robot *prob = (struct robot *)ppar;
     if (NULL==prob) {
-        return;
+        iret = -1;
     }
+
+    pthread_exit(&iret);
+    return NULL;
 }
 
-int rob_start_l(robot *prob) {
+int rob_start(struct robot *prob) {
     pthread_t tid;
     int iret=-1;
     if (NULL!=prob) {
@@ -24,46 +31,38 @@ int rob_start_l(robot *prob) {
 }
 
 
-int rob_init(robot *prob, int ID, int idx, const char *ip, ushort port) {
-    int iret;
+void rob_robot(struct robot *prob,
+    int ID, int idx, const char *ip, ushort port) {
+        int iret;
+        do {
+            if (NULL==prob || ID <0 || idx <0 || idx >=MAX_CLIENT || NULL==ip) {
+                printf("Error: init robot error, in function %s:%s, at line: %d\n",
+                    __FILE__, __FUNCTION__, __LINE__);
+                break;
+            }
 
-    do {
-        iret = -1;
-        if (NULL==prob || ID <0 || idx <0 || idx >=MAX_CLIENT || NULL==ip) {
-            printf("Error: init robot error, in function %s:%s, at line: %d\n",
-                __FILE__, __FUNCTION__, __LINE__);
-            break;
-        }
+            log_loger((void *)prob, "f:\\log.txt");
+            con_cconnect(&prob->con, (void *)prob);
 
-        iret = log_init_log((void *)prob, "f:\\log.txt");
-        if (0>iret) {
-            printf("Error: create log file, in function %s:%s, at line: %d\n",
-                __FILE__, __FUNCTION__, __LINE__);
-            break;
-        }
+            iret = con_setup(&prob->con, 0, ip, port, 1);
+            if (0>iret) {
+                record_ret(&prob->log);
+                break;
+            }
 
-        iret = con_init_cconnect(&prob->con, (void *)prob);
-        if (0>iret) {
-            record_ret((void *)prob);
-            break;
-        }
+            iret = con_create_tcp(&prob->con);
+            if (0>iret) {
+                record_ret(&prob->log);
+                break;
+            }
 
-        iret = con_set_tcp(&prob->con, ip, port, 1);
-        if (0>iret) {
-            record_ret((void *)prob);
-            break;
-        }
-
-        iret = con_create_tcp(&prob->con);
-        if (0>iret) {
-            record_ret((void *)prob);
-            break;
-        }
-
-        prob->mutex = PTHREAD_MUTEX_INITIALIZER;
-        prob->cond  = PTHREAD_COND_INITIALIZER;
-    } while (0);
-
-    return iret;
+            prob->mutex = PTHREAD_MUTEX_INITIALIZER;
+            prob->cond  = PTHREAD_COND_INITIALIZER;
+            iret = rob_start(prob);
+            if (0>iret) {
+                record_ret(&prob->log);
+                break;
+            }
+        } while (0);
 }
 

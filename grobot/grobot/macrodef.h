@@ -59,29 +59,29 @@
 /** @def record_ptr(phost)
  * 记录是志：指针为空
  */
-#define record_ptr(phost) do {\
+#define record_ptr(plog) do {\
     printf("Error: NULL==ptr in function %s:%s, at line: %d\n",\
     __FILE__, __FUNCTION__, __LINE__);\
-    log_record(phost, "Error: NULL==ptr in function %s:%s, at line: %d\n",\
+    log_record(plog, "Error: NULL==ptr in function %s:%s, at line: %d\n",\
     __FILE__, __FUNCTION__, __LINE__);\
 } while (0)
 
 /** @def record_ret(phost)
  * 记录是志：返回值为-1
  */
-#define record_ret(phost) do {\
+#define record_ret(plog) do {\
     printf("Error: -1==ret in function %s:%s, at line: %d\n",\
     __FILE__, __FUNCTION__, __LINE__);\
-    log_record(phost, "Error: NULL==ptr in function %s:%s, at line: %d\n",\
+    log_record(plog, "Error: NULL==ptr in function %s:%s, at line: %d\n",\
     __FILE__, __FUNCTION__, __LINE__);\
 } while (0)
 
 /** @def record_ifo(phost)
  * 记录是志：将指定的参数记录
  */
-#define record_ifo(phost, ret) do {\
+#define record_ifo(plog, ret) do {\
     printf(">>>>"##ret##"<<<<\n");\
-    log_record(phost, ">>>>"##ret##"<<<<\n");\
+    log_record(plog, ">>>>"##ret##"<<<<\n");\
 }while(0)
 
 /** @def unused(phost)

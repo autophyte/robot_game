@@ -5,54 +5,50 @@
 static int              g_current_connect_number    =   0;
 static volatile int     g_max_select_fd             =   0;
 
-void con_set_maxfd(int fd) {
+void con_cconnect(struct cconnect *pcon, void *phost) {
+    if (NULL!=pcon) {
+        memset(pcon, 0, sizeof(struct cconnect));
+
+        pcon->p_host        = phost;
+        pcon->n_nonblock    = 1;
+        pcon->n_index       = g_current_connect_number++;
+    }
+}
+
+/**
+ * 设置select的最大的fd号
+ *
+ * @param[in] fd 要根全局数比较的fd号
+ *
+ * @note 这个函数因为会更改全局变量的值，只在在主线程中调用，其它线程中只读全局变量
+ */
+static void con_set_maxfd(int fd) {
     if (fd >= g_max_select_fd) {
         g_max_select_fd = fd+1;
     }
 }
 
-int con_init_cconnect(cconnect *pcon, void *phost) {
-    int iret=-1;
-    if (NULL!=pcon) {
-        memset(pcon, 0, sizeof(cconnect));
-
-        pcon->p_host = phost;
-        pcon->n_nonblock   = 1;
-        pcon->n_index = g_current_connect_number++;
-        iret = 0;
+int con_setup(struct cconnect *pcon, int ntype,
+    const char *szip, ushort nport, int nnblock) {
+        if (NULL!=pcon) {
+            pcon->sa_dst.sin_family         = htons(nport);
+            pcon->sa_dst.sin_addr.s_addr    = inet_addr(szip);
+            pcon->sa_loc.sin_family         = htons(0);
+            pcon->sa_loc.sin_addr.s_addr    = inet_addr(CLIENTADDR);
+            pcon->n_domain                  = AF_INET;
+            if (0==ntype) {
+                pcon->n_type                = SOCK_STREAM;
+            }
+            else {
+                pcon->n_type                = SOCK_DGRAM;
+            }
+            pcon->n_nonblock                = nnblock;
+            return 0;
         }
-    return iret;
+        return -1;
 }
 
-int con_set_tcp(cconnect *pcon, const char *szip, ushort nport, int nnblock) {
-    if (NULL!=pcon) {
-        pcon->sa_dst.sin_family         = htons(nport);
-        pcon->sa_dst.sin_addr.s_addr    = inet_addr(szip);
-        pcon->sa_loc.sin_family         = htons(0);
-        pcon->sa_loc.sin_addr.s_addr    = inet_addr(CLIENTADDR);
-        pcon->n_domain                  = AF_INET;
-        pcon->n_type                    = SOCK_STREAM;
-        pcon->n_nonblock                = nnblock;
-        return 0;
-    }
-    return -1;
-}
-
-int con_set_udp(cconnect *pcon, const char *szip, int nport, int nnblock) {
-    if (NULL!=pcon) {
-        pcon->sa_dst.sin_family         = htons(nport);
-        pcon->sa_dst.sin_addr.s_addr    = inet_addr(szip);
-        pcon->sa_loc.sin_family         = htons(0);
-        pcon->sa_loc.sin_addr.s_addr    = inet_addr(CLIENTADDR);
-        pcon->n_domain                  = AF_INET;
-        pcon->n_type                    = SOCK_DGRAM;
-        pcon->n_nonblock                = nnblock;
-        return 0;
-    }
-    return -1;
-}
-
-int con_set_block(cconnect *pcon, int nonblock) {
+int con_set_block(struct cconnect *pcon, int nonblock) {
     int flags;
 
     if (0<=nonblock) {
@@ -78,7 +74,7 @@ int con_set_block(cconnect *pcon, int nonblock) {
     return -1;
 }
 
-int con_create_tcp(cconnect *pcon) {
+int con_create_tcp(struct cconnect *pcon) {
     int iret;
 
     do {
@@ -114,7 +110,7 @@ int con_create_tcp(cconnect *pcon) {
     return iret;
 }
 
-int con_snd_msg(cconnect *pcon, void *pmsg, int nlen) {
+int con_snd_msg(struct cconnect *pcon, void *pmsg, int nlen) {
     int iret=-1;
     if (NULL!=pcon && NULL!=pmsg && nlen>0 || nlen<PACKAGE_LEN){
         iret = send(pcon->n_sockfd, pmsg, nlen, 0);
@@ -123,7 +119,7 @@ int con_snd_msg(cconnect *pcon, void *pmsg, int nlen) {
     return iret;
 }
 
-int con_rcv_msg(cconnect *pcon, void *pmsg, int *plen) {
+int con_rcv_msg(struct cconnect *pcon, void *pmsg, int *plen) {
     int iret=-1;
     /*if (NULL!=pcon && NULL!=pmsg && *nlen>0 || *plen<PACKAGE_LEN){
         iret = send(pcon->n_sockfd, pmsg, nlen, 0);

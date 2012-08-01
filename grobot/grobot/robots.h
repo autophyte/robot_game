@@ -8,21 +8,20 @@
 /**
  * 描述一个机器人
  */
-struct _tag_robot {
+struct robot {
     /* 机器人管理、内存分配 */
-    int         index;                  /**< 在数组中的编号 */
-    int         id;                     /**< ID */
+    int             index;              /**< 在数组中的编号 */
+    int             id;                 /**< ID */
 
     /* 网络 */
-    cconnect    con;                    /**< connect */
-    loger       log;                    /**< 日志 */
+    struct cconnect con;                /**< connect */
+    struct loger    log;                /**< 日志 */
 
     /* 线程相关 */
-    pthread_t   pid;                    /**< 运行robot的线程PID */
+    pthread_t       pid;                /**< 运行robot的线程PID */
     pthread_mutex_t mutex;              /**< 互斥锁 */
-    pthread_cond_t cond;                /**< 条件变量 */
+    pthread_cond_t  cond;               /**< 条件变量 */
 };
-typedef struct _tag_robot robot;
 
 
 /**
@@ -37,12 +36,9 @@ typedef struct _tag_robot robot;
  * @param[in] ip 设定服务器IP地址
  * @param[in] port 设定服务器端口号
  *
- * @retval -1 函数运行失，可能是参数错误或其它模块初始化失败导至
- * @retval 0 函数运行成功
- *
  * @see log_init_log con_init_cconnect
  */
-int rob_init(robot *prob, int ID, int idx, const char *ip, ushort port);
+void rob_robot(struct robot *prob, int ID, int idx, const char *ip, ushort port);
 
 
 #endif /* _ROBOTS_H_ */

@@ -3,56 +3,42 @@
 #include "robots.h"
 #include <stdarg.h>
 
-int log_init_log(void *probot, const char *sz_filename) {
-    int iret;
+void log_loger(struct loger *plog, const char *sz_filename) {
     size_t ilen;
-    robot *p_robot = (robot *)probot;
 
-    do {
-        iret = -1;
-        if (NULL==p_robot || NULL==sz_filename) {
-            break;
-        }
+    if (NULL!=plog && NULL!=sz_filename) {
+        memset(plog, 0, sizeof(struct loger));
 
         ilen = strlen(sz_filename);
-        if (MAX_PATH<=ilen) {
-            break;
+        if (MAX_PATH>ilen) {
+            memcpy(plog->sz_name, sz_filename, ilen);
+            plog->p_file = fopen(sz_filename, "wt");
         }
-
-        memcpy(p_robot->log.sz_name, sz_filename, ilen);
-        p_robot->log.p_file = fopen(sz_filename, "wt");
-        if (NULL==p_robot->log.p_file) {
-            break;
-        }
-        iret = 0;
-    } while (0);
-
-    return iret;
+    }
 }
 
-int log_end_log(void *probot) {
-    robot *p_robot = (robot *)probot;
-    if (NULL!=p_robot && NULL!=p_robot->log.p_file) {
-        fclose(p_robot->log.p_file);
-        p_robot->log.p_file = 0;
+int log_end_log(struct loger *plog) {
+    if (NULL!=plog && NULL!=plog->p_file) {
+        fclose(plog->p_file);
+        plog->p_file = NULL;
+
         return 0;
     }
     return -1;
 }
 
-int log_record(void *probot, const char *fmt, ...) {
+int log_record(struct loger *plog, const char *fmt, ...) {
     va_list valist;
     char buff[MAX_BUFFER];
-    robot *p_robot = (robot *)probot;
 
-    if (NULL!=p_robot || NULL!=p_robot->log.p_file || NULL!=fmt) {
+    if (NULL!=plog || NULL!=plog->p_file || NULL!=fmt) {
         memset(buff, 0, MAX_BUFFER);
 
         va_start(valist, fmt);
         vsnprintf(buff, MAX_BUFFER, fmt, valist);
         va_end(valist);
 
-        fprintf(p_robot->log.p_file, "%s\n", buff);
+        fprintf(plog->p_file, "%s\n", buff);
         return 0;
     }
     return -1;
