@@ -3,7 +3,10 @@
 #include "connect.h"
 #include "loger.h"
 
-
+enum {
+    ROBOT_FREE = 0,
+    ROBOT_USED = 1
+};
 
 /**
  * 描述一个机器人
@@ -12,6 +15,7 @@ struct robot {
     /* 机器人管理、内存分配 */
     int             index;              /**< 在数组中的编号 */
     int             id;                 /**< ID */
+    int             valid;              /**< 1表示已经使用，0表示没有使用 */
 
     /* 网络 */
     struct cconnect con;                /**< connect */
@@ -39,7 +43,7 @@ struct robot {
  * @see log_init_log con_init_cconnect
  */
 void rob_robot(struct robot *prob, int ID, int idx, const char *ip, ushort port);
-
+int rob_start(struct robot *prob);
 
 #endif /* _ROBOTS_H_ */
 

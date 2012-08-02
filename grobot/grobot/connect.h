@@ -15,7 +15,23 @@
 #include "loger.h"
 #include <pthread.h>
 
+/**
+ * 连接类型为TCP或者UDP
+ */
+enum {
+    CON_TCP = 0,
+    CON_UDP = 1,
+    CON_TCP_ERROR = 2
+};
 
+/**
+ * 连接是阻塞连接或者非阻塞连接
+ */
+enum {
+    CON_BLOCK = 0,
+    CON_NBLOCK = 1,
+    CON_BLOCK_ERROR = 2
+};
 /**
  * describe connect
  */
@@ -27,7 +43,7 @@ struct cconnect {
     int n_domain;                   /**< 地址类型 */
     int n_type;                     /**< 连接类型 */
     int n_status;                   /**< 状态，0：未连接，1：已经连接 */
-    int n_nonblock;                 /**< 非阻塞标志，1：非阻塞，0阻塞 */
+    unsigned int n_nonblock;        /**< 非阻塞标志，1：非阻塞，0阻塞 */
     /* other */
     void *p_host;                   /**< 所在结构体的指针 */
     struct loger log;               /**< 日志 */
@@ -70,8 +86,8 @@ void con_cconnect(struct cconnect *pcon, void *phost);
  *
  * @see con_getport_loc con_set_udp con_create_tcp
  */
-int con_setup(struct cconnect *pcon, int ntype,
-    const char *szip, ushort nport, int nnblock);
+int con_setup(struct cconnect *pcon,
+    unsigned int ntype, const char *szip, ushort nport, unsigned int nnblock);
 
 
 /**
@@ -79,14 +95,15 @@ int con_setup(struct cconnect *pcon, int ntype,
  *
  * @see con_getport_loc con_set_tcp con_create_udp
  */
-int con_set_udp(struct cconnect *pcon, const char *szip, int nport, int nnblock);
+int con_set_udp(struct cconnect *pcon,
+    const char *szip, unsigned int nport, unsigned int nnblock);
 
 
 /**
  * 设置socket是否阻塞
  *
  * @param[in,out] pcon 需要设置的connect的指针
- * @param[in] nonblock 非阻塞模式标志，1：非阻塞，0阻塞，-1根据pcon中的标志设置
+ * @param[in] nonblock 非阻塞模式标志，1：非阻塞，0阻塞，2根据pcon中的标志设置
  *
  * @retval 0 成功
  * @retval -1 函数运行失败，可能是pcon为NULL或socket无效或阻塞标志无效
@@ -96,7 +113,7 @@ int con_set_udp(struct cconnect *pcon, const char *szip, int nport, int nnblock)
  *
  * @see con_create_tcp con_set_tcp con_set_udp
  */
-int con_set_block(struct cconnect *pcon, int nonblock);
+int con_set_block(struct cconnect *pcon, unsigned int nonblock);
 
 
 /**

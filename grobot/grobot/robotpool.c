@@ -59,7 +59,7 @@ void pool_robotpool(struct robotpool *ppool) {
     if (NULL!=ppool) {
         memset(ppool, 0, sizeof(struct robotpool));
         for (i=0; i<MAX_CLIENT; ++i) {
-            ppool->valids[i]=1;
+            rob_robot(&ppool->robots[i], ppool->ids, i, SERVERADDR, SERVERPORT);
         }
         ppool->ids = 0;
         ppool->ncount = 0;
@@ -80,25 +80,7 @@ void pool_robotpool(struct robotpool *ppool) {
  * @retval -1 获取元素失败，或许ppool为空，或许是池已满
  */
 static int pool_get_freeele(struct robotpool *ppool) {
-    int i=-1;
-
-    if (NULL!=ppool) {
-        for (i=0; i<MAX_CLIENT; ++i) {
-            if (0==ppool->valids[i]) {
-                break;
-            }
-        }
-    }
-
-    if (MAX_CLIENT <= i) {
-        i=-1;
-    }
-
-    return i;
-}
-
-int pool_new_robot(struct robotpool *ppool) {
-    int ifree, iret;
+    int i, iret;
 
     do {
         iret = -1;
@@ -106,15 +88,29 @@ int pool_new_robot(struct robotpool *ppool) {
             break;
         }
 
-        ifree = pool_get_freeele(ppool);
-        if (0>ifree) {
-            break;
+        for (i=0; i<MAX_CLIENT; ++i) {
+            if (ROBOT_FREE==ppool->robots[i].valid) {
+                iret = i;
+                break;/* break for */
+            }
         }
-
-        rob_robot(&ppool->robots[ifree], ppool->ids, ifree,
-            SERVERADDR, SERVERPORT);
-        ppool->valids[ifree] = 0;
     } while (0);
+
+    return iret;
+}
+
+int pool_new_robot(struct robotpool *ppool) {
+    int ifree, iret;
+
+    iret = -1;
+    if (NULL!=ppool) {
+        ifree = pool_get_freeele(ppool);
+
+        if (0 < ifree) {
+            ppool->robots[ifree].valid = ROBOT_USED;
+            iret = rob_start(&ppool->robots[ifree]);
+        }
+    }
 
     return iret;
 }

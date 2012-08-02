@@ -31,6 +31,9 @@
     <Filter Include="头文件\log">
       <UniqueIdentifier>{debf0607-c20d-4abc-874c-3b3ca64e439f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mkfile">
+      <UniqueIdentifier>{9bacaed8-d30b-4654-8a06-8459b4710c68}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="macrodef.h">
@@ -77,5 +80,19 @@
     <ClCompile Include="robotpool.c">
       <Filter>源文件\robot</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\configure">
+      <Filter>mkfile</Filter>
+    </None>
+    <None Include="..\configure.in">
+      <Filter>mkfile</Filter>
+    </None>
+    <None Include="..\Makefile">
+      <Filter>mkfile</Filter>
+    </None>
+    <None Include="..\Makefile.am">
+      <Filter>mkfile</Filter>
+    </None>
   </ItemGroup>
 </Project>

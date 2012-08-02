@@ -56,16 +56,6 @@
 
 /* macro: macro_functions */
 
-/** @def record_ptr(phost)
- * 记录是志：指针为空
- */
-#define record_ptr(plog) do {\
-    printf("Error: NULL==ptr in function %s:%s, at line: %d\n",\
-    __FILE__, __FUNCTION__, __LINE__);\
-    log_record(plog, "Error: NULL==ptr in function %s:%s, at line: %d\n",\
-    __FILE__, __FUNCTION__, __LINE__);\
-} while (0)
-
 /** @def record_ret(phost)
  * 记录是志：返回值为-1
  */
@@ -75,14 +65,6 @@
     log_record(plog, "Error: NULL==ptr in function %s:%s, at line: %d\n",\
     __FILE__, __FUNCTION__, __LINE__);\
 } while (0)
-
-/** @def record_ifo(phost)
- * 记录是志：将指定的参数记录
- */
-#define record_ifo(plog, ret) do {\
-    printf(">>>>"##ret##"<<<<\n");\
-    log_record(plog, ">>>>"##ret##"<<<<\n");\
-}while(0)
 
 /** @def unused(phost)
  * 标记参数没有使用

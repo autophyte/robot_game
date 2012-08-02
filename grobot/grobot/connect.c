@@ -10,7 +10,7 @@ void con_cconnect(struct cconnect *pcon, void *phost) {
         memset(pcon, 0, sizeof(struct cconnect));
 
         pcon->p_host        = phost;
-        pcon->n_nonblock    = 1;
+        pcon->n_nonblock    = CON_NBLOCK;
         pcon->n_index       = g_current_connect_number++;
     }
 }
@@ -28,15 +28,15 @@ static void con_set_maxfd(int fd) {
     }
 }
 
-int con_setup(struct cconnect *pcon, int ntype,
-    const char *szip, ushort nport, int nnblock) {
+int con_setup(struct cconnect *pcon,
+    unsigned int ntype, const char *szip, ushort nport, unsigned int nnblock) {
         if (NULL!=pcon) {
             pcon->sa_dst.sin_family         = htons(nport);
             pcon->sa_dst.sin_addr.s_addr    = inet_addr(szip);
             pcon->sa_loc.sin_family         = htons(0);
             pcon->sa_loc.sin_addr.s_addr    = inet_addr(CLIENTADDR);
             pcon->n_domain                  = AF_INET;
-            if (0==ntype) {
+            if (CON_TCP==ntype) {
                 pcon->n_type                = SOCK_STREAM;
             }
             else {
@@ -48,21 +48,20 @@ int con_setup(struct cconnect *pcon, int ntype,
         return -1;
 }
 
-int con_set_block(struct cconnect *pcon, int nonblock) {
+int con_set_block(struct cconnect *pcon, unsigned int nonblock) {
     int flags;
 
     if (0<=nonblock) {
         pcon->n_nonblock = nonblock;
     }
-    if (NULL!=pcon && pcon->n_sockfd>0 &&
-        (pcon->n_nonblock==0||pcon->n_nonblock==1)) {
+    if (NULL!=pcon && pcon->n_sockfd>0 && pcon->n_nonblock<CON_BLOCK_ERROR) {
 #ifdef linux
         flags = fcntl(pcon->n_sockfd, F_GETFL, 0);
-        if (0==pcon->n_nonblock) {
-            flags &= ~O_NONEBLOCK;
+        if (CON_BLOCK==pcon->n_nonblock) {
+            flags &= ~O_NONBLOCK;
         }
         else{
-            flags |= O_NONEBLOCK;
+            flags |= O_NONBLOCK;
         }
         fcntl(pcon->n_sockfd, F_SETFL, flags);
 #else /*linux*/
@@ -101,7 +100,7 @@ int con_create_tcp(struct cconnect *pcon) {
             break;
         }
 
-        iret = con_set_block(pcon, -1);
+        iret = con_set_block(pcon, CON_BLOCK_ERROR);
         if (0>iret) {
             break;
         }

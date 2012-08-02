@@ -4,10 +4,17 @@
 
 
 struct robotpool {
-    struct robot    robots[MAX_CLIENT];     /**< robot的数组 */
-    int             valids[MAX_CLIENT];     /**< 描述相对应的pools[n]是否有效，1有效 */
-    int             ncount;                 /**< 当前游戏数量 */
-    int             ids;                    /**< 记录下一个robot的ID号 */
+    /** robot的数组 */
+    struct robot    robots[MAX_CLIENT];
+
+    /** 描述相对应的pools[n]是否有效，1表示有效，没有被占用 */
+    /*int             valids[MAX_CLIENT];*/
+
+    /** 当前游戏数量 */
+    int             ncount;
+
+    /** 记录下一个robot的ID号 */
+    int             ids;
 };
 
 /**
