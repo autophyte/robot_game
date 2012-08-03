@@ -15,6 +15,9 @@ struct robotpool {
 
     /** 记录下一个robot的ID号 */
     int             ids;
+
+    /** 线程PID，这个子线程用于等待socket描述符状态更改 */
+    pthread_t       pid_select;
 };
 
 /**

@@ -16,11 +16,15 @@ struct loger
     FILE *p_file;
     char sz_name[MAX_PATH];
 };
+/**
+ * 初始化日志文件目录
+ */
+void module_init_log();
 
 /**
  * 初始化日志文件
  */
-void log_loger(struct loger *plog, const char *sz_filename);
+void log_loger(struct loger *plog, int ID);
 
 /**
  * 结束日志文件
@@ -32,6 +36,8 @@ int log_end_log(struct loger *plog);
  */
 int log_record(struct loger *plog, const char *fmt, ...)__attribute__(
     (format(printf,2,3)));
+
+
 #endif /*_LOGER_H_*/
 
 

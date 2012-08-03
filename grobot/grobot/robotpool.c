@@ -46,6 +46,9 @@ static void pool_wait_threads() {
     }
 }
 
+static void *pool_start_select(void *ppar) {
+
+}
 int pool_exit_thread() {
     if (0==pthread_cond_signal(&g_cond_exit)) {
         return 0;
@@ -58,9 +61,7 @@ void pool_robotpool(struct robotpool *ppool) {
     int i;
     if (NULL!=ppool) {
         memset(ppool, 0, sizeof(struct robotpool));
-        for (i=0; i<MAX_CLIENT; ++i) {
-            rob_robot(&ppool->robots[i], ppool->ids, i, SERVERADDR, SERVERPORT);
-        }
+
         ppool->ids = 0;
         ppool->ncount = 0;
 
@@ -69,6 +70,10 @@ void pool_robotpool(struct robotpool *ppool) {
         g_cond_exit             = PTHREAD_COND_INITIALIZER;
         g_mutex_rcv             = PTHREAD_MUTEX_INITIALIZER;
         g_cond_rcv              = PTHREAD_COND_INITIALIZER;
+
+        for (i=0; i<MAX_CLIENT; ++i) {
+            rob_robot(&ppool->robots[i], ppool->ids++, i, SERVERADDR, SERVERPORT);
+        }
     }
 }
 

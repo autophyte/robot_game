@@ -82,13 +82,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\configure">
-      <Filter>mkfile</Filter>
-    </None>
     <None Include="..\configure.in">
-      <Filter>mkfile</Filter>
-    </None>
-    <None Include="..\Makefile">
       <Filter>mkfile</Filter>
     </None>
     <None Include="..\Makefile.am">

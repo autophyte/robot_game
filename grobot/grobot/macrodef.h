@@ -40,12 +40,24 @@
 #define SOCKET_VERSION  0x202
 #endif /*WIN32*/
 
-#ifndef __GNUC__
+/** @def SOCKET_ERROR
+ * 定义socket函数返回错误值
+ */
+#ifndef SOCKET_ERROR
+#define SOCKET_ERROR (-1)
+#endif /*SOCKET_ERROR*/
+
 /** @def __attribute__
  * GCC优化宏，非GCC时设定为空
  */
+#ifndef __GNUC__
 #define __attribute__(a)
 #endif /*__attribute__*/
+
+/**
+ * 定义日志文件目录名称预留长度
+ */
+#define PEND_SIZE    20
 
 #ifndef MAX_PATH
 /** @def MAX_PATH

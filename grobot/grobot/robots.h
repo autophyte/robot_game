@@ -22,7 +22,8 @@ struct robot {
     struct loger    log;                /**< 日志 */
 
     /* 线程相关 */
-    pthread_t       pid;                /**< 运行robot的线程PID */
+    pthread_t       pid_rob;            /**< 运行robot的线程PID */
+    pthread_t       pid_con;            /**< 用于发送接收服务器端返回消息的线程 */
     pthread_mutex_t mutex;              /**< 互斥锁 */
     pthread_cond_t  cond;               /**< 条件变量 */
 };
@@ -42,7 +43,7 @@ struct robot {
  *
  * @see log_init_log con_init_cconnect
  */
-void rob_robot(struct robot *prob, int ID, int idx, const char *ip, ushort port);
+void rob_robot(struct robot *prob, int ID, int idx, const char *ip, _ushort port);
 int rob_start(struct robot *prob);
 
 #endif /* _ROBOTS_H_ */
