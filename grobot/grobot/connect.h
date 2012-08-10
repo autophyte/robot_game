@@ -7,19 +7,16 @@
 #include <sys/types.h>
 #include <errno.h>
 #include <fcntl.h>
-#else /*linux*/
+#include <rbtree.h>
+#elif defined WIN32
 #include <WinSock2.h>
+#include "rbtree.h"
 #endif /*linux*/
-
-
-#include "loger.h"
 #include <pthread.h>
+#include "msgs.h"
+#include "loger.h"
 
 
-typedef unsigned char       _u8;
-typedef unsigned short      _ushort;
-typedef unsigned short      _u16;
-typedef unsigned int        _uint;
 
 /**
  * 连接类型为TCP或者UDP
@@ -39,40 +36,31 @@ enum {
     CON_BLOCK_ERROR = 2
 };
 
-enum {
-    MSGPKG_INVALID  = 0,
-    MSGPKG_VALID    = 1,
-    MSGPKG_ERROR    = 2
-};
-
-/**
- * 描述一个从网络收到的消息包或者准备发送到网络的消息包
- */
-struct msgpkg {
-    char    msg[PACKAGE_LEN];   /**< 消息 */
-    _u8     msg_valid;          /**< 消息有没有被处理过 */
-    _uint   msg_len;            /**< 消息有效长度 */
-};
-
 /**
  * describe connect
  */
 struct cconnect {
+    void *phost;                    /**< 所在结构体的指针 */
+    int index;                      /**< connect编号 */
+
     /* 网络相关信息 */
     struct sockaddr_in  sa_dst;     /**< 服务器端地址 */
     struct sockaddr_in  sa_loc;     /**< 本地地址 */
-    int n_sockfd;                   /**< socket id */
-    int n_domain;                   /**< 地址类型 */
-    int n_type;                     /**< 连接类型 */
-    int n_status;                   /**< 状态，0：未连接，1：已经连接 */
-    _uint n_nonblock;               /**< 非阻塞标志，1：非阻塞，0阻塞 */
-    /* other */
-    void *p_host;                   /**< 所在结构体的指针 */
+    int sockfd;
+    int domain;
+    int type;                       /**< 连接类型 */
+    int status;                     /**< 状态，0：未连接，1：已经连接 */
+    _uint nonblock;                 /**< 非阻塞标志，1：非阻塞，0阻塞 */
+
     struct loger log;               /**< 日志 */
-    int n_index;                    /**< connect编号 */
-    /* msg informations */
-    struct msgpkg msg_r;            /**< 收到的消息 */
-    struct msgpkg msg_s;            /**< 要发送的消息 */
+
+    /**
+     * 现在消息只处理一个，后面可能要加消息缓存
+     */
+    struct msgs msg_r;
+    struct msgs msg_s;
+
+    struct rb_node node;         /**< 表示树中当前节点 */
 };
 
 
@@ -80,7 +68,7 @@ struct cconnect {
 /**
  * 初始化con模块
  */
-void module_init_con();
+int module_init_con(void *ppool, pthread_t  *ppid);
 
 /**
  * 获取一个消息是否有效，有效返回1，否则返回0
@@ -90,7 +78,7 @@ int con_get_msgvalide(const struct msgpkg *pkg);
 /**
  * 设定一个消息是否有效，参数valide有效1，否则0
  */
-void con_set_msgvalide(const struct msgpkg *pkg, int valide);
+void con_set_msgvalide(struct msgpkg *pkg, int valide);
 
 /**
  * 初始化cconnect变量
@@ -157,26 +145,26 @@ int con_set_block(struct cconnect *pcon, _uint nonblock);
  * 发送消息
  *
  * @param[in] pcon 需要发送消息的connect的指针
- * @param[in] pmsg 需要发送的消息
- * @param[in] nlen 需要发送的消息长度
  *
  * @retval 0 成功
  * @retval -1 函数运行失败
+ *
+ * @remark 送的消息在pcon结构内部中的消息链表中
  */
-int con_snd_msg(struct cconnect *pcon, void *pmsg, int nlen);
+int con_snd_message(struct cconnect *pcon);
 
 
 /**
  * 接收消息
  *
  * @param[in] pcon 接收消息的connect的指针
- * @param[out] pmsg 接收到的消息
- * @param[out] plen 接收到的消息的长度
  *
  * @retval 0 成功
  * @retval -1 函数运行失败
+ *
+ * @remark 接收的消息在pcon结构内部中的消息链表中
  */
-int con_rcv_msg(struct cconnect *pcon, void *pmsg, _uint *plen);
+int con_rcv_message(struct cconnect *pcon);
 
 
 /**
@@ -193,5 +181,9 @@ int con_rcv_msg(struct cconnect *pcon, void *pmsg, _uint *plen);
 int con_create_tcp(struct cconnect *p_con);
 
 
+/**
+ * 处理网络发送接收消息的线程主函数
+ */
+static void *con_net_man(void *ppool);
 
 #endif /* _CONNECT_H_ */

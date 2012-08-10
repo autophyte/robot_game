@@ -80,6 +80,9 @@
     <ClInclude Include="loger.h" />
     <ClInclude Include="macrodef.h" />
     <ClInclude Include="msgfun.h" />
+    <ClInclude Include="msgpkg.h" />
+    <ClInclude Include="msgs.h" />
+    <ClInclude Include="rbtree.h" />
     <ClInclude Include="robotpool.h" />
     <ClInclude Include="robots.h" />
     <ClInclude Include="translate.h" />
@@ -88,6 +91,9 @@
     <ClCompile Include="connect.c" />
     <ClCompile Include="loger.c" />
     <ClCompile Include="msgfun.c" />
+    <ClCompile Include="msgpkg.c" />
+    <ClCompile Include="msgs.c" />
+    <ClCompile Include="rbtree.c" />
     <ClCompile Include="robot.c" />
     <ClCompile Include="robotpool.c" />
     <ClCompile Include="robots.c" />

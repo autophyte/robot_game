@@ -2,37 +2,44 @@
 #include "macrodef.h"
 
 
+typedef int (*RCVSNDFUN)(struct cconnect *pcon);
+
 static int              g_current_connect_number;
 static volatile int     g_max_select_fd;
 static fd_set           g_fd_read;
 static fd_set           g_fd_write;
 
-void module_init_con() {
-    g_current_connect_number    = 0;
-    g_max_select_fd             = 0;
-    FD_ZERO(&g_fd_read);
-    FD_ZERO(&g_fd_write);
+struct cconnect *pool_findcon_fd(void *ppool, int fd);
+struct robot *pool_findrob_fd(void *ppool, int fd);
+
+int module_init_con(void *ppool, pthread_t *ppid) {
+    int iret;
+    iret = -1;
+    if (ppid && ppool) {
+        g_current_connect_number    = 0;
+        g_max_select_fd             = 0;
+        FD_ZERO(&g_fd_read);
+        FD_ZERO(&g_fd_write);
+        iret = pthread_create(ppid, NULL, con_net_man, ppool);
+        if (!iret) {
+            iret = -1;
+        }
+    }
+    return iret;
 }
 
-void msg_msgpkg(struct msgpkg *pmsg) {
-    if (NULL!=pmsg) {
-        memset(pmsg->msg, 0, sizeof(pmsg->msg));
-        pmsg->msg_valid = MSGPKG_INVALID;
-        pmsg->msg_len   = 0;
-    }
-}
 
 void con_add_select(struct cconnect *pcon) {
     if (NULL!=pcon) {
-        FD_SET(pcon->n_sockfd, &g_fd_read);
-        FD_SET(pcon->n_sockfd, &g_fd_write);
+        FD_SET(pcon->sockfd, &g_fd_read);
+        FD_SET(pcon->sockfd, &g_fd_write);
     }
 }
 
 void con_clr_select(struct cconnect *pcon) {
     if (NULL!=pcon) {
-        FD_CLR(pcon->n_sockfd, &g_fd_read);
-        FD_CLR(pcon->n_sockfd, &g_fd_write);
+        FD_CLR(pcon->sockfd, &g_fd_read);
+        FD_CLR(pcon->sockfd, &g_fd_write);
     }
 }
 
@@ -49,11 +56,9 @@ void con_cconnect(struct cconnect *pcon, void *phost) {
     if (NULL!=pcon) {
         memset(pcon, 0, sizeof(struct cconnect));
 
-        pcon->p_host        = phost;
-        pcon->n_nonblock    = CON_NBLOCK;
-        pcon->n_index       = g_current_connect_number++;
-        msg_msgpkg(&pcon->msg_r);
-        msg_msgpkg(&pcon->msg_s);
+        pcon->phost        = phost;
+        pcon->nonblock    = CON_NBLOCK;
+        pcon->index       = g_current_connect_number++;
     }
 }
 
@@ -77,14 +82,14 @@ int con_setup(struct cconnect *pcon,
             pcon->sa_dst.sin_addr.s_addr    = inet_addr(szip);
             pcon->sa_loc.sin_family         = htons(0);
             pcon->sa_loc.sin_addr.s_addr    = inet_addr(CLIENTADDR);
-            pcon->n_domain                  = AF_INET;
+            pcon->domain                  = AF_INET;
             if (CON_TCP==ntype) {
-                pcon->n_type                = SOCK_STREAM;
+                pcon->type                = SOCK_STREAM;
             }
             else {
-                pcon->n_type                = SOCK_DGRAM;
+                pcon->type                = SOCK_DGRAM;
             }
-            pcon->n_nonblock                = nnblock;
+            pcon->nonblock                = nnblock;
             return 0;
         }
         return -1;
@@ -94,21 +99,21 @@ int con_set_block(struct cconnect *pcon, _uint nonblock) {
     int flags;
 
     if (0<=nonblock) {
-        pcon->n_nonblock = nonblock;
+        pcon->nonblock = nonblock;
     }
-    if (NULL!=pcon && pcon->n_sockfd>0 && pcon->n_nonblock<CON_BLOCK_ERROR) {
+    if (NULL!=pcon && pcon->sockfd>0 && pcon->nonblock<CON_BLOCK_ERROR) {
 #ifdef linux
-        flags = fcntl(pcon->n_sockfd, F_GETFL, 0);
-        if (CON_BLOCK==pcon->n_nonblock) {
+        flags = fcntl(pcon->sockfd, F_GETFL, 0);
+        if (CON_BLOCK==pcon->nonblock) {
             flags &= ~O_NONBLOCK;
         }
         else{
             flags |= O_NONBLOCK;
         }
-        fcntl(pcon->n_sockfd, F_SETFL, flags);
-#else /*linux*/
-        flags = pcon->n_nonblock;
-        ioctlsocket(pcon->n_sockfd, FIONBIO, (u_long *)&flags);
+        fcntl(pcon->sockfd, F_SETFL, flags);
+#elif defined WIN32
+        flags = pcon->nonblock;
+        ioctlsocket(pcon->sockfd, FIONBIO, (u_long *)&flags);
 #endif /*linux*/
         return 0;
     }
@@ -124,19 +129,19 @@ int con_create_tcp(struct cconnect *pcon) {
             break;
         }
 
-        pcon->n_sockfd = socket(pcon->n_domain, pcon->n_type, 0);
-        if (0>pcon->n_sockfd) {
+        pcon->sockfd = socket(pcon->domain, pcon->type, 0);
+        if (0>pcon->sockfd) {
             break;
         }
 
-        con_set_maxfd(pcon->n_sockfd);
-        iret = bind(pcon->n_sockfd, (const struct sockaddr *)&pcon->sa_loc,
+        con_set_maxfd(pcon->sockfd);
+        iret = bind(pcon->sockfd, (const struct sockaddr *)&pcon->sa_loc,
             sizeof(struct sockaddr));
         if (0>iret) {
             break;
         }
 
-        iret = connect(pcon->n_sockfd, (const struct sockaddr *)&pcon->sa_dst,
+        iret = connect(pcon->sockfd, (const struct sockaddr *)&pcon->sa_dst,
             sizeof(struct sockaddr));
         if (0>iret) {
             break;
@@ -150,25 +155,6 @@ int con_create_tcp(struct cconnect *pcon) {
 
     return iret;
 }
-
-int con_snd_msg(struct cconnect *pcon, void *pmsg, int nlen) {
-    int iret=-1;
-    if (NULL!=pcon && NULL!=pmsg && nlen>0 || nlen<PACKAGE_LEN){
-        iret = send(pcon->n_sockfd, pmsg, nlen, 0);
-    }
-
-    return iret;
-}
-
-int con_rcv_msg(struct cconnect *pcon, void *pmsg, _uint *plen) {
-    int iret=-1;
-    if (NULL!=pcon && NULL!=pmsg && *plen>0 || *plen<PACKAGE_LEN){
-        iret = send(pcon->n_sockfd, pmsg, *plen, 0);
-    }
-
-    return iret;
-}
-/*>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>splite<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<*/
 
 int con_snd_send(int fd, char *pmsg, _uint nlen) {
     int ileft, iret, ipos;
@@ -191,59 +177,54 @@ int con_snd_send(int fd, char *pmsg, _uint nlen) {
 }
 
 int con_snd_message(struct cconnect *pcon) {
-    int iret, ileft;
+    int iret;
+    struct msgpkg pkg;
+    iret = -1;
 
-    do {
-        iret = -1;
-        if (NULL==pcon) {
-            break;
+    if (pcon) {
+        iret = msgs_pop(&pcon->msg_r, &pkg);
+        if (RETURN_ERROR!=iret) {
+            iret = con_snd_send(pcon->sockfd, pkg.msg, pkg.msg_len);
         }
-
-        if (!con_get_msgvalide(&pcon->msg_s)){
-            break;
-        }
-
-        iret = con_snd_send(
-            pcon->n_sockfd, pcon->msg_s.msg, pcon->msg_s.msg_len);
-        if (0>iret) {
-            break;
-        }
-        con_set_msgvalide(&pcon->msg_s, MSGPKG_INVALID);
-    } while (0);
+    }
 
     return iret;
 }
 
 int con_rcv_message(struct cconnect *pcon) {
     int iret;
+    struct msgpkg pkg;
 
-    do {
-        if (NULL!=pcon) {
-            iret = -1;
-            break;
+    iret = -1;
+    if (pcon) {
+        msgpkg_constructor(&pkg);
+        iret = recv(pcon->sockfd, pkg.msg, sizeof(pkg.msg)-1, 0);
+
+        if (RETURN_ERROR!=iret) {
+            pkg.msg_len = iret;
+            pkg.msg_valid = MSGPKG_VALID;
+            iret = msgs_push(&pcon->msg_r, &pkg);
         }
-        /* 上一个消息有效，表示程序还没有处理上一个消息 */
-        if (MSGPKG_VALID==con_get_msgvalide(&pcon->msg_r)){
-            break;
-        }
-        memset(pcon->msg_r.msg, 0, sizeof(pcon->msg_r.msg));
-        iret = recv(pcon->n_sockfd,
-            pcon->msg_r.msg, sizeof(pcon->msg_r.msg)-1, 0);
-        if (0>iret) {
-            break;
-        }
-        pcon->msg_r.msg_len = iret;
-        con_set_msgvalide(&pcon->msg_r, MSGPKG_VALID);
-    } while (0);
+    }
 
     return iret;
 }
 
-void con_net_man() {
+
+static void con_foreach_fds(void *pool,
+    fd_set *pdes, fd_set *psrc, RCVSNDFUN fn) {
+    _uint i;
+    for (i=0; i<pdes->fd_count; ++i) {
+        if (FD_ISSET(pdes->fd_array[i], psrc)) {
+            fn(pool_findcon_fd(pool, pdes->fd_array[i]));
+        }
+    }
+}
+
+static void *con_net_man(void *ppool) {
+    int ierror;
     fd_set  fd_read, fd_write;
     struct timeval fd_waite;
-    _uint i;
-    int ierror;
 
     fd_waite.tv_sec = 10;
     fd_waite.tv_usec = 0;
@@ -254,18 +235,12 @@ void con_net_man() {
         if (0==ierror) {
             continue;
         }
-        if (-1==ierror) {
+        if (RETURN_ERROR==ierror) {
             break;
         }
-        for (i=0; i<g_fd_read.fd_count; ++i) {
-            if (FD_ISSET(g_fd_read.fd_array[i], &fd_read)) {
-                /* send message to thread who's fd==g_fd_read.fd_array[i] */
-            }
-        }
-        for (i=0; i<g_fd_write.fd_count; ++i) {
-            if (FD_ISSET(g_fd_write.fd_array[i], &fd_write)) {
-                /* send message to thread who's fd==g_fd_read.fd_array[i] */
-            }
-        }
+        con_foreach_fds(ppool, &g_fd_read, &fd_read, con_rcv_message);
+        con_foreach_fds(ppool, &g_fd_write, &fd_write, con_snd_message);
     }
+
+    return NULL;
 }

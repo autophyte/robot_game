@@ -1,8 +1,16 @@
 #include "robotpool.h"
 
-#define __TEST__
+//#define __TEST__
 /* function: implementation */
-#ifdef WIN32
+#ifdef linux
+
+#define con_initwin32sock(pret) do {\
+} while (0)
+
+#define con_dinitwin32sock() do {\
+} while (0);
+
+#elif defined WIN32
 
 static void con_initwin32sock() {
     WSADATA wsaData;
@@ -10,16 +18,7 @@ static void con_initwin32sock() {
 }
 #define con_dinitwin32sock() WSACleanup()
 
-#else /*WIN32*/
-
-#define con_initwin32sock(pret) do {\
-} while (0)
-
-#define con_dinitwin32sock() do {\
-} while (0);
- 
-
-#endif /*WIN32*/
+#endif /*linux*/
 
 
 #ifndef __TEST__

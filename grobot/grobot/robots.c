@@ -3,15 +3,9 @@
 
 #ifdef linux
 #include <unistd.h>
-#else /*linux*/
+#elif defined WIN32
 #include <direct.h>
 #endif /*linux*/
-
-extern pthread_mutex_t g_mutex_exit;
-extern pthread_cond_t g_cond_exit;
-extern pthread_mutex_t g_mutex_rcv;
-extern pthread_cond_t g_cond_rcv;
-
 
 /* private functions */
 static void *rob_loop_main(void *ppar) {
@@ -21,29 +15,6 @@ static void *rob_loop_main(void *ppar) {
     if (NULL==prob) {
         i_ext = -1;
         p_return = NULL;
-    }
-
-    pthread_exit(&i_ext);
-    return p_return;
-}
-
-static void *rob_loop_con(void *ppar) {
-    int i_ext;
-    void *p_return;
-    char sz_msg[PACKAGE_LEN];
-    struct robot *prob;
-    _uint nlen;
-
-    i_ext       = -1;
-    p_return    = NULL;
-    prob        = (struct robot *)ppar;
-
-    if (NULL!=prob) {
-        for (;;) {
-            memset(sz_msg, 0, sizeof(sz_msg));
-            con_rcv_msg(&prob->con, sz_msg, &nlen);
-
-        }
     }
 
     pthread_exit(&i_ext);
@@ -81,11 +52,6 @@ int rob_start(struct robot *prob) {
         }
 
         iret = pthread_create(&prob->pid_rob, NULL, rob_loop_main, (void *)prob);
-        if (0>iret) {
-            break;
-        }
-
-        iret = pthread_create(&prob->pid_con, NULL, rob_loop_con, (void *)prob);
         if (0>iret) {
             break;
         }

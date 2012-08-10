@@ -10,11 +10,6 @@
  */
 #define SERVERPORT      2208
 
-pthread_mutex_t g_mutex_exit;           /**< 互斥锁,用于通知子线程退出 */
-pthread_cond_t g_cond_exit;             /**< 条件变量,用于通知子线程退出 */
-pthread_mutex_t g_mutex_rcv;            /**< 互斥锁,用于通知子线程接收数据 */
-pthread_cond_t g_cond_rcv;              /**< 条件变量,用于通知子线程接收数据 */
-int g_current_child_thread;             /**< 记录当前还在运行的子线程 */
 
 /**
  * 等待所有子线程退出
@@ -28,31 +23,10 @@ int g_current_child_thread;             /**< 记录当前还在运行的子线程 */
  * @see pool_exit_thread
  */
 static void pool_wait_threads() {
-    int iret;
-
-    while(1) {
-        pthread_mutex_lock(&g_mutex_exit);
-        iret = pthread_cond_wait(&g_cond_exit, &g_mutex_exit);
-        pthread_mutex_unlock(&g_mutex_exit);
-
-        if (0!=iret) {
-            continue;
-        }
-
-        --g_current_child_thread;
-        if (0==g_current_child_thread) {
-            break;
-        }
-    }
+ 
 }
 
-static void *pool_start_select(void *ppar) {
-
-}
 int pool_exit_thread() {
-    if (0==pthread_cond_signal(&g_cond_exit)) {
-        return 0;
-    }
 
     return -1;
 }
@@ -65,12 +39,6 @@ void pool_robotpool(struct robotpool *ppool) {
         ppool->ids = 0;
         ppool->ncount = 0;
 
-        g_current_child_thread  = 0;
-        g_mutex_exit            = PTHREAD_MUTEX_INITIALIZER;
-        g_cond_exit             = PTHREAD_COND_INITIALIZER;
-        g_mutex_rcv             = PTHREAD_MUTEX_INITIALIZER;
-        g_cond_rcv              = PTHREAD_COND_INITIALIZER;
-
         for (i=0; i<MAX_CLIENT; ++i) {
             rob_robot(&ppool->robots[i], ppool->ids++, i, SERVERADDR, SERVERPORT);
         }
@@ -78,7 +46,7 @@ void pool_robotpool(struct robotpool *ppool) {
 }
 
 /**
- * 获取池中一个空的，没有使用的元素
+ * 获取池中一个空的、没有使用的元素
  *
  * @param[in] ppool 池的指针
  *
@@ -121,3 +89,35 @@ int pool_new_robot(struct robotpool *ppool) {
 }
 
 
+struct cconnect *pool_findcon_fd(void *vpool, int fd) {
+    int i;
+    struct cconnect *pret;
+    struct robotpool *ppool;
+
+    pret = NULL;
+    ppool = (struct robotpool *)vpool;
+    for (i=0; i<MAX_CLIENT; ++i) {
+        if (fd == ppool->robots[i].con.sockfd) {
+            pret = &ppool->robots[i].con;
+            break;
+        }
+    }
+    return pret;
+}
+
+struct robot *pool_findrob_fd(void *vpool, int fd) {
+    int i;
+    struct robot *pret;
+    struct robotpool *ppool;
+
+    pret = NULL;
+    ppool = (struct robotpool *)vpool;
+    for (i=0; i<MAX_CLIENT; ++i) {
+        if (fd == ppool->robots[i].con.sockfd) {
+            pret = &ppool->robots[i];
+            break;
+        }
+    }
+
+    return pret;
+}

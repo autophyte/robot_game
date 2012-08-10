@@ -5,19 +5,21 @@
 
 static char g_sz_local_path[MAX_PATH];
 
-#ifndef linux
-const char DIR_SPL              = '\\';
-const char DIR_CAT[PEND_SIZE]   = "\\log\\";
-const char DIR_CAT2[PEND_SIZE]  = "log\\";
-#else /*linux*/
+#ifdef linux
 const char DIR_SPL              = '/';
 const char DIR_CAT[PEND_SIZE]   = "/log/";
 const char DIR_CAT2[PEND_SIZE]  = "log/";
+#elif defined WIN32
+const char DIR_SPL              = '\\';
+const char DIR_CAT[PEND_SIZE]   = "\\log\\";
+const char DIR_CAT2[PEND_SIZE]  = "log\\";
 #endif /*linux*/
 
-void module_init_log() {
+int module_init_log() {
+    int iret;
     size_t n_len;
 
+    iret = -1;
     memset(g_sz_local_path, 0, sizeof(g_sz_local_path) - PEND_SIZE);
     do {
         if (NULL==getcwd(g_sz_local_path, sizeof(g_sz_local_path))) {
@@ -38,7 +40,11 @@ void module_init_log() {
             break;
         }
         strcat(g_sz_local_path, DIR_CAT2);
+
+        iret = 0;
     } while (0);
+
+    return iret;
 }
 
 /* private functions */

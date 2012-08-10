@@ -13,24 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="头文件\connect">
-      <UniqueIdentifier>{848da778-debd-42e0-9ac1-6d051b4597dd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="源文件\connect">
-      <UniqueIdentifier>{c1e9efac-3747-4c3a-834d-c3c0eaafb7fb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="头文件\robot">
-      <UniqueIdentifier>{0728b1ef-7abe-40a3-a345-04a321d1f0cd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="源文件\robot">
-      <UniqueIdentifier>{ab400ede-2186-4d5f-beac-02b8bf8e1ac9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="源文件\log">
-      <UniqueIdentifier>{9c557ac5-663d-4947-87bb-f382bf92d913}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="头文件\log">
-      <UniqueIdentifier>{debf0607-c20d-4abc-874c-3b3ca64e439f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="mkfile">
       <UniqueIdentifier>{9bacaed8-d30b-4654-8a06-8459b4710c68}</UniqueIdentifier>
     </Filter>
@@ -39,46 +21,64 @@
     <ClInclude Include="macrodef.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="connect.h">
-      <Filter>头文件\connect</Filter>
-    </ClInclude>
-    <ClInclude Include="robotpool.h">
-      <Filter>头文件\robot</Filter>
-    </ClInclude>
-    <ClInclude Include="robots.h">
-      <Filter>头文件\robot</Filter>
-    </ClInclude>
-    <ClInclude Include="loger.h">
-      <Filter>头文件\log</Filter>
-    </ClInclude>
     <ClInclude Include="msgfun.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="translate.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="rbtree.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="robotpool.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="robots.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="loger.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="connect.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="msgs.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="msgpkg.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="connect.c">
-      <Filter>源文件\connect</Filter>
-    </ClCompile>
-    <ClCompile Include="robots.c">
-      <Filter>源文件\robot</Filter>
-    </ClCompile>
-    <ClCompile Include="loger.c">
-      <Filter>源文件\log</Filter>
-    </ClCompile>
     <ClCompile Include="msgfun.c">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="translate.c">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="rbtree.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="connect.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
     <ClCompile Include="robot.c">
-      <Filter>源文件\robot</Filter>
+      <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="robotpool.c">
-      <Filter>源文件\robot</Filter>
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="robots.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="loger.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="msgpkg.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="msgs.c">
+      <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

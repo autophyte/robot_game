@@ -19,7 +19,7 @@ struct loger
 /**
  * 初始化日志文件目录
  */
-void module_init_log();
+int module_init_log();
 
 /**
  * 初始化日志文件
