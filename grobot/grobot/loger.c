@@ -1,4 +1,4 @@
-#include "loger.h"
+ï»¿#include "loger.h"
 #include "macrodef.h"
 #include "robots.h"
 #include <stdarg.h>
@@ -27,9 +27,9 @@ int module_init_log() {
         }
 
         n_len = sizeof(g_sz_local_path);
-        /* ÒòÎªºóÃæÒª¼ÓÉÏ["log\","\log\","/log/","log/"]ÖÐ1¸ö
-         * ÓÖÒª¼ÓÉÏÎÄ¼þÃû"log_xxx.log"
-         * ËùÒÔÒªÔ¤Áô1²¿·Ö¿Õ¼ä£¬±£Áô³¤¶ÈÎª20
+        /* é¥çŠ±è´Ÿéšåº¨æ½°ç‘•ä½¸å§žæ¶“å¥«"log\","\log\","/log/","log/"]æ¶“?æ¶“?
+         * é™å £î›¦é”çŠ±ç¬‚é‚å›¦æ¬¢éš?log_xxx.log"
+         * éŽµâ‚¬æµ ãƒ¨î›¦æ£°å‹­æš€1é–®ã„¥åžŽç»Œæ´ªæ£¿é”›å±¼ç¹šé£æ¬“æš±æ´ï¸¿è´Ÿ20
          */
         if (n_len>=MAX_PATH - PEND_SIZE) {
             break;

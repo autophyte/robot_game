@@ -1,48 +1,1 @@
-#ifndef _ROBOTPOOL_H_
-#define _ROBOTPOOL_H_  1
-#include "robots.h"
-
-
-struct robotpool {
-    /** robotµÄÊı×é */
-    struct robot    robots[MAX_CLIENT];
-
-    /** ÃèÊöÏà¶ÔÓ¦µÄpools[n]ÊÇ·ñÓĞĞ§£¬1±íÊ¾ÓĞĞ§£¬Ã»ÓĞ±»Õ¼ÓÃ */
-    /*int             valids[MAX_CLIENT];*/
-
-    /** µ±Ç°ÓÎÏ·ÊıÁ¿ */
-    int             ncount;
-
-    /** ¼ÇÂ¼ÏÂÒ»¸örobotµÄIDºÅ */
-    int             ids;
-
-    /** Ïß³ÌPID£¬Õâ¸ö×ÓÏß³ÌÓÃÓÚµÈ´ısocketÃèÊö·û×´Ì¬¸ü¸Ä */
-    pthread_t       pid_select;
-
-    sem_t           sem_ncount;
-};
-
-/**
- * ³õÊ¼»¯»úÆ÷ÈË³Ø
- *
- * @param[in] ppool ĞèÒª³õÊ¼»¯µÄ³Ø
- */
-void pool_robotpool(struct robotpool *ppool);
-
-/**
- * ÔÚ³ØÖĞ´´½¨Ò»¸ö»úÆ÷ÈË
- *
- * @param[in] ppool ĞèÒª´´½¨»úÆ÷ÈËµÄ³Ø
- *
- * @see pool_create_robot
- */
-int pool_new_robot(struct robotpool *ppool);
-
-/**
- * Í¨ÖªÖ÷Ïß³ÌÏß³ÌÍË³ö
- */
-int pool_exit_thread();
-
-
-#endif /* _ROBOTPOOL_H_ */
-
+ï»¿#ifndef _ROBOTPOOL_H_#define _ROBOTPOOL_H_  1#include "robots.h"struct robotpool {    /** robotçš„æ•°ç»„ */    struct robot    robots[MAX_CLIENT];    /** æè¿°ç›¸å¯¹åº”çš„pools[n]æ˜¯å¦æœ‰æ•ˆï¼Œ1è¡¨ç¤ºæœ‰æ•ˆï¼Œæ²¡æœ‰è¢«å ç”¨ */    /*int             valids[MAX_CLIENT];*/    /** å½“å‰æ¸¸æˆæ•°é‡ */    int             ncount;    /** è®°å½•ä¸‹ä¸€ä¸ªrobotçš„IDå· */    int             ids;    /** çº¿ç¨‹PIDï¼Œè¿™ä¸ªå­çº¿ç¨‹ç”¨äºç­‰å¾…socketæè¿°ç¬¦çŠ¶æ€æ›´æ”¹ */    pthread_t       pid_select;    sem_t           sem_ncount;};/** * åˆå§‹åŒ–æœºå™¨äººæ±  * * @param[in] ppool éœ€è¦åˆå§‹åŒ–çš„æ±  */void pool_robotpool(struct robotpool *ppool);/** * åœ¨æ± ä¸­åˆ›å»ºä¸€ä¸ªæœºå™¨äºº * * @param[in] ppool éœ€è¦åˆ›å»ºæœºå™¨äººçš„æ±  * * @see pool_create_robot */int pool_new_robot(struct robotpool *ppool);/** * é€šçŸ¥ä¸»çº¿ç¨‹çº¿ç¨‹é€€å‡º */int pool_exit_thread();#endif /* _ROBOTPOOL_H_ */

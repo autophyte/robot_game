@@ -1,4 +1,4 @@
-#ifndef _ROBOTS_H_
+ï»¿#ifndef _ROBOTS_H_
 #define _ROBOTS_H_  1
 #include "connect.h"
 #include "loger.h"
@@ -9,37 +9,37 @@ enum {
 };
 
 /**
- * ÃèÊöÒ»¸ö»úÆ÷ÈË
+ * æè¿°ä¸€ä¸ªæœºå™¨äºº
  */
 struct robot {
-    /* »úÆ÷ÈË¹ÜÀí¡¢ÄÚ´æ·ÖÅä */
-    int             index;              /**< ÔÚÊı×éÖĞµÄ±àºÅ */
+    /* æœºå™¨äººç®¡ç†ã€å†…å­˜åˆ†é… */
+    int             index;              /**< åœ¨æ•°ç»„ä¸­çš„ç¼–å· */
     int             id;                 /**< ID */
-    int             valid;              /**< 1±íÊ¾ÒÑ¾­Ê¹ÓÃ£¬0±íÊ¾Ã»ÓĞÊ¹ÓÃ */
+    int             valid;              /**< 1è¡¨ç¤ºå·²ç»ä½¿ç”¨ï¼Œ0è¡¨ç¤ºæ²¡æœ‰ä½¿ç”¨ */
 
-    /* ÍøÂç */
+    /* ç½‘ç»œ */
     struct cconnect con;                /**< connect */
-    struct loger    log;                /**< ÈÕÖ¾ */
+    struct loger    log;                /**< æ—¥å¿— */
 
-    /* Ïß³ÌÏà¹Ø */
-    pthread_t       pid_rob;            /**< ÔËĞĞrobotµÄÏß³ÌPID */
-    pthread_t       pid_con;            /**< ÓÃÓÚ·¢ËÍ½ÓÊÕ·şÎñÆ÷¶Ë·µ»ØÏûÏ¢µÄÏß³Ì */
-    pthread_mutex_t mutex;              /**< »¥³âËø */
-    pthread_cond_t  cond;               /**< Ìõ¼ş±äÁ¿ */
+    /* çº¿ç¨‹ç›¸å…³ */
+    pthread_t       pid_rob;            /**< è¿è¡Œrobotçš„çº¿ç¨‹PID */
+    pthread_t       pid_con;            /**< ç”¨äºå‘é€æ¥æ”¶æœåŠ¡å™¨ç«¯è¿”å›æ¶ˆæ¯çš„çº¿ç¨‹ */
+    pthread_mutex_t mutex;              /**< äº’æ–¥é” */
+    pthread_cond_t  cond;               /**< æ¡ä»¶å˜é‡ */
 };
 
 
 /**
- * ³õÊ¼»¯Ò»¸ö»úÆ÷ÈË
+ * åˆå§‹åŒ–ä¸€ä¸ªæœºå™¨äºº
  *
- * @details ³õÊ¼»¯Ò»¸ö»úÆ÷ÈË£¬°üÀ¨±äÁ¿»ù±¾ÉèÖÃ¡¢ÒÔ¼°ÈÕÖ¾³õÊ¼»¯¡¢connectÄ£¿é³õÊ¼»¯¡¢
- *      ÆäËüÄ£¿é³õÊ¼»¯
+ * @details åˆå§‹åŒ–ä¸€ä¸ªæœºå™¨äººï¼ŒåŒ…æ‹¬å˜é‡åŸºæœ¬è®¾ç½®ã€ä»¥åŠæ—¥å¿—åˆå§‹åŒ–ã€connectæ¨¡å—åˆå§‹åŒ–ã€
+ *      å…¶å®ƒæ¨¡å—åˆå§‹åŒ–
  *
- * @param[in,out] prob ĞèÒª³õÊ¼»¯µÄ»úÆ÷ÈËµÄÖ¸Õë
- * @param[in] ID Éè¶¨»úÆ÷ÈËµÄIDºÅ
- * @param[in] index Éè¶¨»úÆ÷ÈËÔÚ³ØÖĞµÄindex
- * @param[in] ip Éè¶¨·şÎñÆ÷IPµØÖ·
- * @param[in] port Éè¶¨·şÎñÆ÷¶Ë¿ÚºÅ
+ * @param[in,out] prob éœ€è¦åˆå§‹åŒ–çš„æœºå™¨äººçš„æŒ‡é’ˆ
+ * @param[in] ID è®¾å®šæœºå™¨äººçš„IDå·
+ * @param[in] index è®¾å®šæœºå™¨äººåœ¨æ± ä¸­çš„index
+ * @param[in] ip è®¾å®šæœåŠ¡å™¨IPåœ°å€
+ * @param[in] port è®¾å®šæœåŠ¡å™¨ç«¯å£å·
  *
  * @see log_init_log con_init_cconnect
  */

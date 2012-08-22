@@ -1,4 +1,4 @@
-/*msgs.h*/
+﻿/*msgs.h*/
 #ifndef _MSGS_H_
 #define _MSGS_H_ 1
 

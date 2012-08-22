@@ -1,4 +1,4 @@
-/* connect.h */
+ï»¿/* connect.h */
 #ifndef _CONNECT_H_
 #define _CONNECT_H_ 1
 
@@ -19,7 +19,7 @@
 
 
 /**
- * Á¬½ÓÀàĞÍÎªTCP»òÕßUDP
+ * è¿æ¥ç±»å‹ä¸ºTCPæˆ–è€…UDP
  */
 enum {
     CON_TCP         = 0,
@@ -28,7 +28,7 @@ enum {
 };
 
 /**
- * Á¬½ÓÊÇ×èÈûÁ¬½Ó»òÕß·Ç×èÈûÁ¬½Ó
+ * è¿æ¥æ˜¯é˜»å¡è¿æ¥æˆ–è€…éé˜»å¡è¿æ¥
  */
 enum {
     CON_BLOCK       = 0,
@@ -40,74 +40,74 @@ enum {
  * describe connect
  */
 struct cconnect {
-    void *phost;                    /**< ËùÔÚ½á¹¹ÌåµÄÖ¸Õë */
-    int index;                      /**< connect±àºÅ */
+    void *phost;                    /**< æ‰€åœ¨ç»“æ„ä½“çš„æŒ‡é’ˆ */
+    int index;                      /**< connectç¼–å· */
 
-    /* ÍøÂçÏà¹ØĞÅÏ¢ */
-    struct sockaddr_in  sa_dst;     /**< ·şÎñÆ÷¶ËµØÖ· */
-    struct sockaddr_in  sa_loc;     /**< ±¾µØµØÖ· */
+    /* ç½‘ç»œç›¸å…³ä¿¡æ¯ */
+    struct sockaddr_in  sa_dst;     /**< æœåŠ¡å™¨ç«¯åœ°å€ */
+    struct sockaddr_in  sa_loc;     /**< æœ¬åœ°åœ°å€ */
     int sockfd;
     int domain;
-    int type;                       /**< Á¬½ÓÀàĞÍ */
-    int status;                     /**< ×´Ì¬£¬0£ºÎ´Á¬½Ó£¬1£ºÒÑ¾­Á¬½Ó */
-    _uint nonblock;                 /**< ·Ç×èÈû±êÖ¾£¬1£º·Ç×èÈû£¬0×èÈû */
+    int type;                       /**< è¿æ¥ç±»å‹ */
+    int status;                     /**< çŠ¶æ€ï¼Œ0ï¼šæœªè¿æ¥ï¼Œ1ï¼šå·²ç»è¿æ¥ */
+    _uint nonblock;                 /**< éé˜»å¡æ ‡å¿—ï¼Œ1ï¼šéé˜»å¡ï¼Œ0é˜»å¡ */
 
-    struct loger log;               /**< ÈÕÖ¾ */
+    struct loger log;               /**< æ—¥å¿— */
 
     /**
-     * ÏÖÔÚÏûÏ¢Ö»´¦ÀíÒ»¸ö£¬ºóÃæ¿ÉÄÜÒª¼ÓÏûÏ¢»º´æ
+     * ç°åœ¨æ¶ˆæ¯åªå¤„ç†ä¸€ä¸ªï¼Œåé¢å¯èƒ½è¦åŠ æ¶ˆæ¯ç¼“å­˜
      */
     struct msgs msg_r;
     struct msgs msg_s;
 
-    struct rb_node node;         /**< ±íÊ¾Ê÷ÖĞµ±Ç°½Úµã */
+    struct rb_node node;         /**< è¡¨ç¤ºæ ‘ä¸­å½“å‰èŠ‚ç‚¹ */
 };
 
 
 
 /**
- * ³õÊ¼»¯conÄ£¿é
+ * åˆå§‹åŒ–conæ¨¡å—
  */
 int module_init_con(void *ppool, pthread_t  *ppid);
 
 /**
- * »ñÈ¡Ò»¸öÏûÏ¢ÊÇ·ñÓĞĞ§£¬ÓĞĞ§·µ»Ø1£¬·ñÔò·µ»Ø0
+ * è·å–ä¸€ä¸ªæ¶ˆæ¯æ˜¯å¦æœ‰æ•ˆï¼Œæœ‰æ•ˆè¿”å›1ï¼Œå¦åˆ™è¿”å›0
  */
 int con_get_msgvalide(const struct msgpkg *pkg);
 
 /**
- * Éè¶¨Ò»¸öÏûÏ¢ÊÇ·ñÓĞĞ§£¬²ÎÊıvalideÓĞĞ§1£¬·ñÔò0
+ * è®¾å®šä¸€ä¸ªæ¶ˆæ¯æ˜¯å¦æœ‰æ•ˆï¼Œå‚æ•°valideæœ‰æ•ˆ1ï¼Œå¦åˆ™0
  */
 void con_set_msgvalide(struct msgpkg *pkg, int valide);
 
 /**
- * ³õÊ¼»¯cconnect±äÁ¿
+ * åˆå§‹åŒ–cconnectå˜é‡
  *
- * @param[out] pcon ĞèÒª³õÊ¼»¯µÄcconnect±äÁ¿µÄÖ¸Õë
- * @param[in] phost Éè¶¨ËŞÖ÷µÄÖ¸Õë£¬¼´cconnect±äÁ¿ËùÔÚ½á¹¹ÌåÖ¸Õë
+ * @param[out] pcon éœ€è¦åˆå§‹åŒ–çš„cconnectå˜é‡çš„æŒ‡é’ˆ
+ * @param[in] phost è®¾å®šå®¿ä¸»çš„æŒ‡é’ˆï¼Œå³cconnectå˜é‡æ‰€åœ¨ç»“æ„ä½“æŒ‡é’ˆ
  *
- * @note Ã¿¸öconnect±äÁ¿¶¼ĞèÒªÕâ¸öº¯Êı³õÊ¼»¯ºó·½ÄÜÊ¹ÓÃ
+ * @note æ¯ä¸ªconnectå˜é‡éƒ½éœ€è¦è¿™ä¸ªå‡½æ•°åˆå§‹åŒ–åæ–¹èƒ½ä½¿ç”¨
  */
 void con_cconnect(struct cconnect *pcon, void *phost);
 
 
 /**
- * ÉèÖÃtcpÁ¬µÄ²ÎÊı
+ * è®¾ç½®tcpè¿çš„å‚æ•°
  *
- * @details ÉèÖÃudp/tcpÁ¬µÄ²ÎÊı£¬°üÀ¨·şÆ÷IPµØÖ·¡¢¶Ë¿ÚºÅ£¬±¾»úIPµØÖ·¡¢¶Ë¿ÚºÅ¡¢Á¬½ÓÀàĞÍ¡¢
- *      Á¬½ÓÊÇ·ñ×èÈû
+ * @details è®¾ç½®udp/tcpè¿çš„å‚æ•°ï¼ŒåŒ…æ‹¬æœå™¨IPåœ°å€ã€ç«¯å£å·ï¼Œæœ¬æœºIPåœ°å€ã€ç«¯å£å·ã€è¿æ¥ç±»å‹ã€
+ *      è¿æ¥æ˜¯å¦é˜»å¡
  *
- * @param[out] pcon ĞèÒªÉèÖÃµÄconnectµÄÖ¸Õë
- * @param[in] ntype Á¬½ÓÀàĞÍ,0:tcp, >0 udp
- * @param[in] szip ·şÎñÆ÷µÄIPµØÖ·
- * @param[in] nport ·şÎñÆ÷µÄ¶Ë¿ÚºÅ
- * @param[in] nnblock ·Ç×èÈûÄ£Ê½±êÖ¾£¬1£º·Ç×èÈû£¬0×èÈû
+ * @param[out] pcon éœ€è¦è®¾ç½®çš„connectçš„æŒ‡é’ˆ
+ * @param[in] ntype è¿æ¥ç±»å‹,0:tcp, >0 udp
+ * @param[in] szip æœåŠ¡å™¨çš„IPåœ°å€
+ * @param[in] nport æœåŠ¡å™¨çš„ç«¯å£å·
+ * @param[in] nnblock éé˜»å¡æ¨¡å¼æ ‡å¿—ï¼Œ1ï¼šéé˜»å¡ï¼Œ0é˜»å¡
  *
- * @retval 0 ³É¹¦
- * @retval -1 º¯ÊıÔËĞĞÊ§°Ü£¬¿ÉÄÜÊÇpconÎªNULL»ò»ñÈ¡±¾µØ¶Ë¿ÚºÅÊ§°Ü
+ * @retval 0 æˆåŠŸ
+ * @retval -1 å‡½æ•°è¿è¡Œå¤±è´¥ï¼Œå¯èƒ½æ˜¯pconä¸ºNULLæˆ–è·å–æœ¬åœ°ç«¯å£å·å¤±è´¥
  *
- * @note Õâ¸öº¯ÊıÖ»ÊÇÉèÖÃ´´½¨socketµÄ²ÎÊı£¬@link con_create_tcp @endlink
- *      º¯Êı»á¸ù¾İÕâ¸ö²ÎÊıÉèÖÃ´´½¨socketÁ¬½Ó
+ * @note è¿™ä¸ªå‡½æ•°åªæ˜¯è®¾ç½®åˆ›å»ºsocketçš„å‚æ•°ï¼Œ@link con_create_tcp @endlink
+ *      å‡½æ•°ä¼šæ ¹æ®è¿™ä¸ªå‚æ•°è®¾ç½®åˆ›å»ºsocketè¿æ¥
  *
  * @see con_getport_loc con_set_udp con_create_tcp
  */
@@ -116,7 +116,7 @@ int con_setup(struct cconnect *pcon,
 
 
 /**
- * ÉèÖÃudpÁ¬µÄ²ÎÊı
+ * è®¾ç½®udpè¿çš„å‚æ•°
  *
  * @see con_getport_loc con_set_tcp con_create_udp
  */
@@ -125,16 +125,16 @@ int con_set_udp(struct cconnect *pcon,
 
 
 /**
- * ÉèÖÃsocketÊÇ·ñ×èÈû
+ * è®¾ç½®socketæ˜¯å¦é˜»å¡
  *
- * @param[in,out] pcon ĞèÒªÉèÖÃµÄconnectµÄÖ¸Õë
- * @param[in] nonblock ·Ç×èÈûÄ£Ê½±êÖ¾£¬1£º·Ç×èÈû£¬0×èÈû£¬2¸ù¾İpconÖĞµÄ±êÖ¾ÉèÖÃ
+ * @param[in,out] pcon éœ€è¦è®¾ç½®çš„connectçš„æŒ‡é’ˆ
+ * @param[in] nonblock éé˜»å¡æ¨¡å¼æ ‡å¿—ï¼Œ1ï¼šéé˜»å¡ï¼Œ0é˜»å¡ï¼Œ2æ ¹æ®pconä¸­çš„æ ‡å¿—è®¾ç½®
  *
- * @retval 0 ³É¹¦
- * @retval -1 º¯ÊıÔËĞĞÊ§°Ü£¬¿ÉÄÜÊÇpconÎªNULL»òsocketÎŞĞ§»ò×èÈû±êÖ¾ÎŞĞ§
+ * @retval 0 æˆåŠŸ
+ * @retval -1 å‡½æ•°è¿è¡Œå¤±è´¥ï¼Œå¯èƒ½æ˜¯pconä¸ºNULLæˆ–socketæ— æ•ˆæˆ–é˜»å¡æ ‡å¿—æ— æ•ˆ
  *
- * @note Õâ¸öº¯ÊıÔËĞĞµÄÇ°ÌáÊÇsocketÒÑ¾­´´½¨£¬Èç¹û²ÎÊınonblock²»Îª-1£¬Ôò°´ÕÕnonblock
- *      À´ÉèÖÃÊÇ·ñ×èÈû£¬·ñÔò£¬°´ÕÕpconÖĞµÄ²ÎÊıÉèÖÃ
+ * @note è¿™ä¸ªå‡½æ•°è¿è¡Œçš„å‰ææ˜¯socketå·²ç»åˆ›å»ºï¼Œå¦‚æœå‚æ•°nonblockä¸ä¸º-1ï¼Œåˆ™æŒ‰ç…§nonblock
+ *      æ¥è®¾ç½®æ˜¯å¦é˜»å¡ï¼Œå¦åˆ™ï¼ŒæŒ‰ç…§pconä¸­çš„å‚æ•°è®¾ç½®
  *
  * @see con_create_tcp con_set_tcp con_set_udp
  */
@@ -142,62 +142,62 @@ int con_set_block(struct cconnect *pcon, _uint nonblock);
 
 
 /**
- * ·¢ËÍÏûÏ¢
+ * å‘é€æ¶ˆæ¯
  *
- * @param[in] pcon ĞèÒª·¢ËÍÏûÏ¢µÄconnectµÄÖ¸Õë
+ * @param[in] pcon éœ€è¦å‘é€æ¶ˆæ¯çš„connectçš„æŒ‡é’ˆ
  *
- * @retval 0 ³É¹¦
- * @retval -1 º¯ÊıÔËĞĞÊ§°Ü
+ * @retval 0 æˆåŠŸ
+ * @retval -1 å‡½æ•°è¿è¡Œå¤±è´¥
  *
- * @remark ËÍµÄÏûÏ¢ÔÚpcon½á¹¹ÄÚ²¿ÖĞµÄÏûÏ¢Á´±íÖĞ
+ * @remark é€çš„æ¶ˆæ¯åœ¨pconç»“æ„å†…éƒ¨ä¸­çš„æ¶ˆæ¯é“¾è¡¨ä¸­
  */
 int con_snd_message(struct cconnect *pcon);
 
 
 /**
- * ½ÓÊÕÏûÏ¢
+ * æ¥æ”¶æ¶ˆæ¯
  *
- * @param[in] pcon ½ÓÊÕÏûÏ¢µÄconnectµÄÖ¸Õë
+ * @param[in] pcon æ¥æ”¶æ¶ˆæ¯çš„connectçš„æŒ‡é’ˆ
  *
- * @retval 0 ³É¹¦
- * @retval -1 º¯ÊıÔËĞĞÊ§°Ü
+ * @retval 0 æˆåŠŸ
+ * @retval -1 å‡½æ•°è¿è¡Œå¤±è´¥
  *
- * @remark ½ÓÊÕµÄÏûÏ¢ÔÚpcon½á¹¹ÄÚ²¿ÖĞµÄÏûÏ¢Á´±íÖĞ
+ * @remark æ¥æ”¶çš„æ¶ˆæ¯åœ¨pconç»“æ„å†…éƒ¨ä¸­çš„æ¶ˆæ¯é“¾è¡¨ä¸­
  */
 int con_rcv_message(struct cconnect *pcon);
 
 
 /**
- * ´´½¨Ò»¸ötcpÁ¬½Ó
+ * åˆ›å»ºä¸€ä¸ªtcpè¿æ¥
  *
- * @details º¯Êı»á¸ùé§pconÖĞµÄ²ÎÊı´´½¨Ò»¸öÍ¨Ñ¶µÄÁ¬½Ó»áÓĞsocket->bind->connectµÄ²½Öè
- *      ²¢»áÉèÖÃÁ¬ÊÇ·ñ×èÈû
+ * @details å‡½æ•°ä¼šæ ¹æ¤pconä¸­çš„å‚æ•°åˆ›å»ºä¸€ä¸ªé€šè®¯çš„è¿æ¥ä¼šæœ‰socket->bind->connectçš„æ­¥éª¤
+ *      å¹¶ä¼šè®¾ç½®è¿æ˜¯å¦é˜»å¡
  *
- * @param[in,out] p_con ĞèÒª´´½¨Á¬½ÓµÄconnectµÄÖ¸Õë
+ * @param[in,out] p_con éœ€è¦åˆ›å»ºè¿æ¥çš„connectçš„æŒ‡é’ˆ
  *
- * @retval 0 ³É¹¦
- * @retval -1 º¯ÊıÔËĞĞÊ§°Ü
+ * @retval 0 æˆåŠŸ
+ * @retval -1 å‡½æ•°è¿è¡Œå¤±è´¥
  */
 int con_create_tcp(struct cconnect *p_con);
 
 
 /**
- * ´¦ÀíÍøÂç·¢ËÍ½ÓÊÕÏûÏ¢µÄÏß³ÌÖ÷º¯Êı
+ * å¤„ç†ç½‘ç»œå‘é€æ¥æ”¶æ¶ˆæ¯çš„çº¿ç¨‹ä¸»å‡½æ•°
  */
 static void *con_net_man(void *ppool);
 
 /*
- * ½«ÊÕ·¢Ïß³ÌÒÑ¾­ÊÕÈ¡µ½µÄÏûÏ¢È¡³ö
+ * å°†æ”¶å‘çº¿ç¨‹å·²ç»æ”¶å–åˆ°çš„æ¶ˆæ¯å–å‡º
  *
- * »úÆ÷ÈËÖ÷Ïß³Ìµ÷ÓÃ
+ * æœºå™¨äººä¸»çº¿ç¨‹è°ƒç”¨
  */
 #define con_pull_msg(pcon, pmsg) \
     msgs_pop(&((pcon)->msg_r), (struct msgpkg *)(pmsg))
 
 /*
- * ½«×¼±¸·¢ËÍµÄÏûÏ¢Ñ¹ÈëÏûÏ¢¶ÓÁĞ
+ * å°†å‡†å¤‡å‘é€çš„æ¶ˆæ¯å‹å…¥æ¶ˆæ¯é˜Ÿåˆ—
  *
- * »úÆ÷ÈËÖ÷Ïß³Ìµ÷ÓÃ
+ * æœºå™¨äººä¸»çº¿ç¨‹è°ƒç”¨
  */
 #define con_push_msg(pcon, pmsg) \
     msgs_push(&((pcon)->msg_r), (struct msgpkg *)(pmsg))

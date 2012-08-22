@@ -1,4 +1,4 @@
-#ifndef _LOGER_H_
+ï»¿#ifndef _LOGER_H_
 #define _LOGER_H_   1
 
 #include "macrodef.h"
@@ -9,7 +9,7 @@
 
 
 /**
- * ÃèÊöÒ»¸öÈÕÖ¾ÎÄ¼ş
+ * æè¿°ä¸€ä¸ªæ—¥å¿—æ–‡ä»¶
  */
 struct loger
 {
@@ -17,22 +17,22 @@ struct loger
     char sz_name[MAX_PATH];
 };
 /**
- * ³õÊ¼»¯ÈÕÖ¾ÎÄ¼şÄ¿Â¼
+ * åˆå§‹åŒ–æ—¥å¿—æ–‡ä»¶ç›®å½•
  */
 int module_init_log();
 
 /**
- * ³õÊ¼»¯ÈÕÖ¾ÎÄ¼ş
+ * åˆå§‹åŒ–æ—¥å¿—æ–‡ä»¶
  */
 void log_loger(struct loger *plog, int ID);
 
 /**
- * ½áÊøÈÕÖ¾ÎÄ¼ş
+ * ç»“æŸæ—¥å¿—æ–‡ä»¶
  */
 int log_end_log(struct loger *plog);
 
 /**
- * ¼ÇÂ¼ÈÕÖ¾ÎÄ¼ş
+ * è®°å½•æ—¥å¿—æ–‡ä»¶
  */
 int log_record(struct loger *plog, const char *fmt, ...)__attribute__(
     (format(printf,2,3)));

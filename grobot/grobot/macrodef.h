@@ -1,130 +1,1 @@
-#ifndef _MACRODEF_H_
-#define _MACRODEF_H_    1
-
-/* macro: constant */
-
-/** @def CLIENTADDR
- * ¶¨Òé¿Í»§¶ËIPµØÖ·
- */
-#define CLIENTADDR      "127.0.0.1"
-
-
-
-/** @def ADDRESS_LEN
- * ¶¨ÒéIPµØÖ·µÄ×î´ó³¤¶È
- */
-#define ADDRESS_LEN     20
-
-
-
-/** @def MAX_CLIENT
- * Éè¶¨³äÐíµÄ¿Í»§¶ËµÄ×î´óÊýÁ¿
- */
-#define MAX_CLIENT      128
-
-
-
-/** @def MAX_BUFFER
- *Éè¶¨bufferµÄ³¤¶È
- */
-#define MAX_BUFFER      1024
-
-
-
-/** @def MAX_STOREMSG
- * ¶¨Òé´æ´¢ÏûÏ¢µÄÊýÁ¿
- */
-#define MAX_STOREMSG    10
-
-
-
-#ifdef WIN32
-/** @def strncasecmp
- * Í³Ò»windowsºÍlinuxº¯ÊýÃû³Æ
- */
-#define strncasecmp     strnicmp
-
-/** @def SOCKET_VERSION
- * ¶¨ÒéwindowsÏÂsocket°æ±¾ºÅ
- */
-#define SOCKET_VERSION  0x202
-#endif /*WIN32*/
-
-
-
-/** @def SOCKET_ERROR
- * ¶¨Òåsocketº¯Êý·µ»Ø´íÎóÖµ
- */
-#ifndef SOCKET_ERROR
-#define SOCKET_ERROR (-1)
-#endif /*SOCKET_ERROR*/
-
-#define RETURN_ERROR (-1)
-
-/** @def __attribute__
- * GCCÓÅ»¯ºê£¬·ÇGCCÊ±Éè¶¨Îª¿Õ
- */
-#ifndef __GNUC__
-#define __attribute__(a)
-#endif /*__attribute__*/
-
-
-
-/**
- * ¶¨ÒåÈÕÖ¾ÎÄ¼þÄ¿Â¼Ãû³ÆÔ¤Áô³¤¶È£¬Ô¤Áô¸øÎÄ¼þÃû
- */
-#define PEND_SIZE    20
-
-
-
-#ifndef MAX_PATH
-/** @def MAX_PATH
- * ¶¨ÒéÎÄ¼þÃû×î³¤¶È
- */
-#define MAX_PATH        260
-#endif  /*MAX_PATH*/
-
-
-
-/* macro: macro_functions */
-
-/** @def record_ret(phost)
- * ¼ÇÂ¼ÊÇÖ¾£º·µ»ØÖµÎª-1
- */
-#define record_ret(plog) do {\
-    printf("Error: -1==ret in function %s:%s, at line: %d\n",\
-    __FILE__, __FUNCTION__, __LINE__);\
-    log_record(plog, "Error: NULL==ptr in function %s:%s, at line: %d\n",\
-    __FILE__, __FUNCTION__, __LINE__);\
-} while (0)
-
-
-
-/** @def unused(phost)
- * ±ê¼Ç²ÎÊýÃ»ÓÐÊ¹ÓÃ
- */
-#define unused(ret) do {\
-} while (0)
-
-
-
-#define offsetof(TYPE, MEMBER) ((size_t) &((TYPE *)0)->MEMBER)  
-
-
-
-/** @def get_host
- * ¸ù¾Ý³ÉÔ±±äÁ¿µÄÖ¸Õë»ñÆäËÞÖ÷±äÁ¿µÄÖ¸Õë
- *
- * @param ptr ³ÉÔ±±äÁ¿µÄÖ¸Õë
- * @param type ËÞÖ÷ÀàÐÍ
- * @param member ³ÉÔ±±äÁ¿µÄÃû³Æ
- */
-#define container_of(ptr, type, member) \
-    ((type *)((char *)(ptr)-(unsigned long)(&((type *)0)->member)))
-
-
-#ifndef NULL
-#define NULL (void *)0
-#endif
-
-#endif
+ï»¿#ifndef _MACRODEF_H_#define _MACRODEF_H_    1/* macro: constant *//** @def CLIENTADDR * å®šè®®å®¢æˆ·ç«¯IPåœ°å€ */#define CLIENTADDR      "127.0.0.1"/** @def ADDRESS_LEN * å®šè®®IPåœ°å€çš„æœ€å¤§é•¿åº¦ */#define ADDRESS_LEN     20/** @def MAX_CLIENT * è®¾å®šå……è®¸çš„å®¢æˆ·ç«¯çš„æœ€å¤§æ•°é‡ */#define MAX_CLIENT      128/** @def MAX_BUFFER *è®¾å®šbufferçš„é•¿åº¦ */#define MAX_BUFFER      1024/** @def MAX_STOREMSG * å®šè®®å­˜å‚¨æ¶ˆæ¯çš„æ•°é‡ */#define MAX_STOREMSG    10#ifdef WIN32/** @def strncasecmp * ç»Ÿä¸€windowså’Œlinuxå‡½æ•°åç§° */#define strncasecmp     strnicmp/** @def SOCKET_VERSION * å®šè®®windowsä¸‹socketç‰ˆæœ¬å· */#define SOCKET_VERSION  0x202#endif /*WIN32*//** @def SOCKET_ERROR * å®šä¹‰socketå‡½æ•°è¿”å›žé”™è¯¯å€¼ */#ifndef SOCKET_ERROR#define SOCKET_ERROR (-1)#endif /*SOCKET_ERROR*/#define RETURN_ERROR (-1)/** @def __attribute__ * GCCä¼˜åŒ–å®ï¼ŒéžGCCæ—¶è®¾å®šä¸ºç©º */#ifndef __GNUC__#define __attribute__(a)#endif /*__attribute__*//** * å®šä¹‰æ—¥å¿—æ–‡ä»¶ç›®å½•åç§°é¢„ç•™é•¿åº¦ï¼Œé¢„ç•™ç»™æ–‡ä»¶å */#define PEND_SIZE    20#ifndef MAX_PATH/** @def MAX_PATH * å®šè®®æ–‡ä»¶åæœ€é•¿åº¦ */#define MAX_PATH        260#endif  /*MAX_PATH*//* macro: macro_functions *//** @def record_ret(phost) * è®°å½•æ˜¯å¿—ï¼šè¿”å›žå€¼ä¸º-1 */#define record_ret(plog) do {\    printf("Error: -1==ret in function %s:%s, at line: %d\n",\    __FILE__, __FUNCTION__, __LINE__);\    log_record(plog, "Error: NULL==ptr in function %s:%s, at line: %d\n",\    __FILE__, __FUNCTION__, __LINE__);\} while (0)/** @def unused(phost) * æ ‡è®°å‚æ•°æ²¡æœ‰ä½¿ç”¨ */#define unused(ret) do {\} while (0)#define offsetof(TYPE, MEMBER) ((size_t) &((TYPE *)0)->MEMBER)  /** @def get_host * æ ¹æ®æˆå‘˜å˜é‡çš„æŒ‡é’ˆèŽ·å…¶å®¿ä¸»å˜é‡çš„æŒ‡é’ˆ * * @param ptr æˆå‘˜å˜é‡çš„æŒ‡é’ˆ * @param type å®¿ä¸»ç±»åž‹ * @param member æˆå‘˜å˜é‡çš„åç§° */#define container_of(ptr, type, member) \    ((type *)((char *)(ptr)-(unsigned long)(&((type *)0)->member)))#ifndef NULL#define NULL (void *)0#endif#endif
