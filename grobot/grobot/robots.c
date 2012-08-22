@@ -1,5 +1,7 @@
 #include "robots.h"
 #include <pthread.h>
+#include "msgfun.h"
+#include "connect.h"
 
 #ifdef linux
 #include <unistd.h>
@@ -9,15 +11,26 @@
 
 /* private functions */
 static void *rob_loop_main(void *ppar) {
-    int i_ext;
+    int i_ext, i;
     void *p_return;
+    struct msgpkg tmp_msg;
+    struct _tag_msgfun mfarr[MAX_PATH];
     struct robot *prob = (struct robot *)ppar;
+/*
     if (NULL==prob) {
         i_ext = -1;
         p_return = NULL;
+    }*/
+    /*rob_get_msgfun_ls(mfarr);*/
+    msgpkg_constructor(&tmp_msg);
+    for (i=0; i<MAX_PATH; ++i) {
+        if (mfarr[i].n_msg) {
+            con_push_msg(&prob->con, &tmp_msg);
+            con_pull_msg(&prob->con, &tmp_msg);
+            mfarr[i].p_fun(tmp_msg.msg, 0);
+        }
     }
-
-    pthread_exit(&i_ext);
+    /*pthread_exit(&i_ext);*/
     return p_return;
 }
 

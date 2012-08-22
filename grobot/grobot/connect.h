@@ -186,4 +186,20 @@ int con_create_tcp(struct cconnect *p_con);
  */
 static void *con_net_man(void *ppool);
 
+/*
+ * 将收发线程已经收取到的消息取出
+ *
+ * 机器人主线程调用
+ */
+#define con_pull_msg(pcon, pmsg) \
+    msgs_pop(&((pcon)->msg_r), (struct msgpkg *)(pmsg))
+
+/*
+ * 将准备发送的消息压入消息队列
+ *
+ * 机器人主线程调用
+ */
+#define con_push_msg(pcon, pmsg) \
+    msgs_push(&((pcon)->msg_r), (struct msgpkg *)(pmsg))
+
 #endif /* _CONNECT_H_ */

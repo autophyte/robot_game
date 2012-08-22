@@ -28,7 +28,16 @@ int main(int argc, char *argv[]) {
     con_initwin32sock();
 
     pool_robotpool(&pool);
-
+    /*get_robot_count()*/
+    /*set_robot_name()*/
+    pool_new_robot(&pool);
+    while(1) {
+        if (pool.ncount) {
+            sleep(1000);
+            continue;
+        }
+        break;
+    }
     con_dinitwin32sock();
     return 0;
 }

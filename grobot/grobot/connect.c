@@ -12,6 +12,9 @@ static fd_set           g_fd_write;
 struct cconnect *pool_findcon_fd(void *ppool, int fd);
 struct robot *pool_findrob_fd(void *ppool, int fd);
 
+
+
+
 int module_init_con(void *ppool, pthread_t *ppid) {
     int iret;
     iret = -1;
@@ -176,13 +179,18 @@ int con_snd_send(int fd, char *pmsg, _uint nlen) {
     return iret;
 }
 
+/*
+ * 从指定的con中发送1个消息
+ *
+ * 收发消息线程中运行
+ */
 int con_snd_message(struct cconnect *pcon) {
     int iret;
     struct msgpkg pkg;
     iret = -1;
 
     if (pcon) {
-        iret = msgs_pop(&pcon->msg_r, &pkg);
+        iret = msgs_pop(&pcon->msg_s, &pkg);
         if (RETURN_ERROR!=iret) {
             iret = con_snd_send(pcon->sockfd, pkg.msg, pkg.msg_len);
         }
@@ -191,6 +199,11 @@ int con_snd_message(struct cconnect *pcon) {
     return iret;
 }
 
+/*
+ * 从指定的con中接收1个消息
+ *
+ * 收发消息线程中运行
+ */
 int con_rcv_message(struct cconnect *pcon) {
     int iret;
     struct msgpkg pkg;
@@ -211,6 +224,11 @@ int con_rcv_message(struct cconnect *pcon) {
 }
 
 
+/*
+ * 调用函数，从可接受或可发送fd上面接收、发送消息
+ *
+ * 收发消息线程中运行
+ */
 static void con_foreach_fds(void *pool,
     fd_set *pdes, fd_set *psrc, RCVSNDFUN fn) {
     _uint i;
@@ -221,6 +239,10 @@ static void con_foreach_fds(void *pool,
     }
 }
 
+/* 收发消息线程主函数
+ * 函数负责所有机器人的消息接收和发送
+ * 当收到消息时，通知机器人主线程，不同的机器人主线程对应不同的socket
+ */
 static void *con_net_man(void *ppool) {
     int ierror;
     fd_set  fd_read, fd_write;
@@ -244,3 +266,5 @@ static void *con_net_man(void *ppool) {
 
     return NULL;
 }
+
+

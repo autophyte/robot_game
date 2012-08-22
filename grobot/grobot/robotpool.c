@@ -38,6 +38,7 @@ void pool_robotpool(struct robotpool *ppool) {
 
         ppool->ids = 0;
         ppool->ncount = 0;
+        sem_init(&ppool->sem_ncount, 0, 0);
 
         for (i=0; i<MAX_CLIENT; ++i) {
             rob_robot(&ppool->robots[i], ppool->ids++, i, SERVERADDR, SERVERPORT);
@@ -82,6 +83,9 @@ int pool_new_robot(struct robotpool *ppool) {
         if (0 < ifree) {
             ppool->robots[ifree].valid = ROBOT_USED;
             iret = rob_start(&ppool->robots[ifree]);
+            sem_wait(&ppool->sem_ncount);
+            ++ppool->ncount;
+            sem_post(&ppool->sem_ncount);
         }
     }
 
