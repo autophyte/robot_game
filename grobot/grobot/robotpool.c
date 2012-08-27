@@ -43,6 +43,7 @@ void pool_robotpool(struct robotpool *ppool) {
         for (i=0; i<MAX_CLIENT; ++i) {
             rob_robot(&ppool->robots[i], ppool->ids++, i, SERVERADDR, SERVERPORT);
         }
+        module_init_con(ppool, &ppool->pid_select);
     }
 }
 
