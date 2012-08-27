@@ -19,74 +19,72 @@
 
 
 /**
- * 连接类型为TCP或者UDP
+ * describe connect type: TCP or UDP
  */
-enum {
-    CON_TCP         = 0,
-    CON_UDP         = 1,
-    CON_TCP_ERROR   = 2
+enum CON_TP{
+    CON_TP_TCP      = 0,
+    CON_TP_UDP      = 1,
+    CON_TP_ERROR    = 2
 };
 
 /**
- * 连接是阻塞连接或者非阻塞连接
+ * describe connect type: block or none block
  */
-enum {
-    CON_BLOCK       = 0,
-    CON_NBLOCK      = 1,
-    CON_BLOCK_ERROR = 2
+enum CON_BK{
+    CON_BK_BLOCK       = 0,
+    CON_BK_NBLOCK      = 1,
+    CON_BK_ERROR       = 2
 };
 
 /**
- * describe connect
+ * describe connect detail information
  */
 struct cconnect {
-    void *phost;                    /**< 所在结构体的指针 */
-    int index;                      /**< connect编号 */
+    void *phost;                /**< the host/parent variable point */
+    int index;                  /**< connect index, the index of array */
 
-    /* 网络相关信息 */
-    struct sockaddr_in  sa_dst;     /**< 服务器端地址 */
-    struct sockaddr_in  sa_loc;     /**< 本地地址 */
-    int sockfd;
-    int domain;
-    int type;                       /**< 连接类型 */
-    int status;                     /**< 状态，0：未连接，1：已经连接 */
-    _uint nonblock;                 /**< 非阻塞标志，1：非阻塞，0阻塞 */
+    /* about net */
+    struct sockaddr_in  sa_dst; /**< connect server address */
+    struct sockaddr_in  sa_loc; /**< local address */
+    int sockfd;                 /**< socket id */
+    int domain;                 /**< socket domain */
+    int type;                   /**< socket type (describe tcp or udp) */
+    int status;                 /**< status， 0：connected，1：disconnected */
+    _uint nonblock;             /**< block flag，1：none-block，0:block */
 
-    struct loger log;               /**< 日志 */
+    struct loger log;           /**< log file */
 
-    /**
-     * 现在消息只处理一个，后面可能要加消息缓存
-     */
-    struct msgs msg_r;
-    struct msgs msg_s;
+    struct msgs msg_r;          /**< rcv message list */
+    struct msgs msg_s;          /**< snd message list */
 
-    struct rb_node node;         /**< 表示树中当前节点 */
+    struct rb_node node;        /**< 表示树中当前节点 */
 };
 
 
 
 /**
- * 初始化con模块
+ * init con module
+ *
+ * @detail this function only run once and will set some public parameters,
+ *  create a thread, which will be in charge of receive/send message
+ *
+ * @param[in] ppool point of robot pool (main pool)
+ * @param[out] ppid store the pid of connect main thread
+ *
+ * @retval 0 function run success
+ * @retval -1 some error occured
  */
 int module_init_con(void *ppool, pthread_t  *ppid);
 
-/**
- * 获取一个消息是否有效，有效返回1，否则返回0
- */
-int con_get_msgvalide(const struct msgpkg *pkg);
+
 
 /**
- * 设定一个消息是否有效，参数valide有效1，否则0
- */
-void con_set_msgvalide(struct msgpkg *pkg, int valide);
-
-/**
- * 初始化cconnect变量
+ * construct a cconnect variable
  *
- * @param[out] pcon 需要初始化的cconnect变量的指针
- * @param[in] phost 设定宿主的指针，即cconnect变量所在结构体指针
+ * @param[out] pcon cconnect variable point
+ * @param[in] phost the host variable point (robot point)
  *
- * @note 每个connect变量都需要这个函数初始化后方能使用
+ * @note this function should be the first function for every cconect variable
  */
 void con_cconnect(struct cconnect *pcon, void *phost);
 

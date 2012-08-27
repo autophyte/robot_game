@@ -14,7 +14,7 @@ struct robot *pool_findrob_fd(void *ppool, int fd);
 
 
 
-
+/* init con module */
 int module_init_con(void *ppool, pthread_t *ppid) {
     int iret;
     iret = -1;
@@ -24,7 +24,7 @@ int module_init_con(void *ppool, pthread_t *ppid) {
         FD_ZERO(&g_fd_read);
         FD_ZERO(&g_fd_write);
         iret = pthread_create(ppid, NULL, con_net_man, ppool);
-        if (!iret) {
+        if (iret) {
             iret = -1;
         }
     }
@@ -59,8 +59,8 @@ void con_cconnect(struct cconnect *pcon, void *phost) {
     if (NULL!=pcon) {
         memset(pcon, 0, sizeof(struct cconnect));
 
-        pcon->phost        = phost;
-        pcon->nonblock    = CON_NBLOCK;
+        pcon->phost       = phost;
+        pcon->nonblock    = CON_BK_NBLOCK;
         pcon->index       = g_current_connect_number++;
     }
 }
@@ -86,7 +86,7 @@ int con_setup(struct cconnect *pcon,
             pcon->sa_loc.sin_family         = htons(0);
             pcon->sa_loc.sin_addr.s_addr    = inet_addr(CLIENTADDR);
             pcon->domain                  = AF_INET;
-            if (CON_TCP==ntype) {
+            if (CON_TP_TCP==ntype) {
                 pcon->type                = SOCK_STREAM;
             }
             else {
@@ -104,10 +104,10 @@ int con_set_block(struct cconnect *pcon, _uint nonblock) {
     if (0<=nonblock) {
         pcon->nonblock = nonblock;
     }
-    if (NULL!=pcon && pcon->sockfd>0 && pcon->nonblock<CON_BLOCK_ERROR) {
+    if (NULL!=pcon && pcon->sockfd>0 && pcon->nonblock<CON_BK_ERROR) {
 #ifdef linux
         flags = fcntl(pcon->sockfd, F_GETFL, 0);
-        if (CON_BLOCK==pcon->nonblock) {
+        if (CON_BK_BLOCK==pcon->nonblock) {
             flags &= ~O_NONBLOCK;
         }
         else{
@@ -150,7 +150,7 @@ int con_create_tcp(struct cconnect *pcon) {
             break;
         }
 
-        iret = con_set_block(pcon, CON_BLOCK_ERROR);
+        iret = con_set_block(pcon, CON_BK_ERROR);
         if (0>iret) {
             break;
         }

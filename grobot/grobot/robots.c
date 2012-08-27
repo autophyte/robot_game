@@ -45,7 +45,7 @@ void rob_robot(struct robot *prob, int ID, int idx, const char *ip, _ushort port
 
         log_loger(&prob->log, ID);
         con_cconnect(&prob->con, (void *)prob);
-        con_setup(&prob->con, 0, ip, port, CON_NBLOCK);
+        con_setup(&prob->con, 0, ip, port, CON_BK_NBLOCK);
     }
 }
 
