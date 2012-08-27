@@ -2,24 +2,32 @@
 #include <string.h>
 #include <stdlib.h>
 
+/* construct a msgs array package */
 void msgs_constructor(struct msgs *pmsgs, _uint count) {
-    pmsgs->max_slots =   count;
-    pmsgs->front     =   0;
-    pmsgs->rear      =   0;
-    pmsgs->buf       =   (struct msgpkg *)calloc(count, sizeof(struct msgpkg));
-    sem_init(&pmsgs->mutex, 0, 1);
-    sem_init(&pmsgs->slots, 0, count);
-    sem_init(&pmsgs->items, 0, 0);
+    if (pmsgs && count) {
+        pmsgs->max_slots =   count;
+        pmsgs->front     =   0;
+        pmsgs->rear      =   0;
+        pmsgs->buf       =   (struct msgpkg *)calloc(count, sizeof(struct msgpkg));
+        sem_init(&pmsgs->mutex, 0, 1);
+        sem_init(&pmsgs->slots, 0, count);
+        sem_init(&pmsgs->items, 0, 0);
 
-    if (pmsgs->buf) {
-        msgpkg_constructor_arr(pmsgs->buf, count);
+        if (pmsgs->buf) {
+            msgpkg_constructor_arr(pmsgs->buf, count);
+        }
     }
 }
 
+/* destruct a msgs array package */
 void msgs_destructor(struct msgs *pmsgs) {
-    free(pmsgs->buf);
+    if (pmsgs && pmsgs->buf) {
+        free(pmsgs->buf);
+        pmsgs->buf = NULL;
+    }
 }
 
+/* push a message to message array package */
 int msgs_push(struct msgs *pmsgs, struct msgpkg *ppkg) {
     if (pmsgs && ppkg) {
         sem_wait(&pmsgs->slots);
@@ -33,6 +41,7 @@ int msgs_push(struct msgs *pmsgs, struct msgpkg *ppkg) {
     return -1;
 }
 
+/* pop the front message from message array package */
 int msgs_pop(struct msgs *pmsgs, struct msgpkg *ppkg) {
     if (pmsgs && ppkg) {
         sem_wait(&pmsgs->items);
