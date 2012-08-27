@@ -1,24 +1,24 @@
 ﻿#include "robotpool.h"
 
 /** @def SERVERADDR
- * 瀹氳server绔疘P鍦板潃
+ * 定议server端IP地址
  */
 #define SERVERADDR      "127.0.0.1"
 
 /** @def SERVERPORT
- * 瀹氳server绔彛
+ * 定议server端口
  */
 #define SERVERPORT      2208
 
 
 /**
- * 绛夊緟鎵€鏈夊瓙绾跨▼閫€鍑?
+ * 等待所有子线程退出
  *
- * @details 绛夊緟鎵€鏈夊瓙绾跨▼閫€鍑?姣忔敹鍒颁竴涓瓙绾跨▼閫€鍑烘秷鎭紙g_cond_exit锛?
- *      鍙橀噺g_current_child_thread鍑?锛岀洿鍒癵_current_child_thread涓?鏃堕€€鍑?
+ * @details 等待所有子线程退出,每收到一个子线程退出消息（g_cond_exit）,
+ *      变量g_current_child_thread减1，直到g_current_child_thread为0时退出
  *
- * @note 杩欎釜鍑芥暟鍦ㄤ富绾跨▼鎴栬€呯鐞嗙嚎绋嬶紙濡傛灉鏈夌鐞嗙嚎绋嬶級涓皟鐢紝鐢ㄤ簬绛夊緟鎵€鏈夊叾瀹冪嚎绋?
- *      閫€鍑猴紝鍏跺畠绾跨▼鍦ㄥ摝閫€鍑烘椂锛岄渶瑕佽皟鐢╬ool_exit_thread閫氱煡绾跨▼缁撴潫
+ * @note 这个函数在主线程或者管理线程（如果有管理线程）中调用，用于等待所有其它线程
+ *      退出，其它线程在哦退出时，需要调用pool_exit_thread通知线程结束
  *
  * @see pool_exit_thread
  */
@@ -47,11 +47,11 @@ void pool_robotpool(struct robotpool *ppool) {
 }
 
 /**
- * 鑾峰彇姹犱腑涓€涓┖鐨勩€佹病鏈変娇鐢ㄧ殑鍏冪礌
+ * 获取池中一个空的、没有使用的元素
  *
- * @param[in] ppool 姹犵殑鎸囬拡
+ * @param[in] ppool 池的指针
  *
- * @retval -1 鑾峰彇鍏冪礌澶辫触锛屾垨璁竝pool涓虹┖锛屾垨璁告槸姹犲凡婊?
+ * @retval -1 获取元素失败，或许ppool为空，或许是池已满
  */
 static int pool_get_freeele(struct robotpool *ppool) {
     int i, iret;

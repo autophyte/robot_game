@@ -27,9 +27,9 @@ int module_init_log() {
         }
 
         n_len = sizeof(g_sz_local_path);
-        /* 鍥犱负鍚庨潰瑕佸姞涓奫"log\","\log\","/log/","log/"]涓?涓?
-         * 鍙堣鍔犱笂鏂囦欢鍚?log_xxx.log"
-         * 鎵€浠ヨ棰勭暀1閮ㄥ垎绌洪棿锛屼繚鐣欓暱搴︿负20
+        /* 因为后面要加上["log\","\log\","/log/","log/"]中1个
+         * 又要加上文件名"log_xxx.log"
+         * 所以要预留1部分空间，保留长度为20
          */
         if (n_len>=MAX_PATH - PEND_SIZE) {
             break;

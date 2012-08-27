@@ -18,6 +18,7 @@ static void con_initwin32sock() {
 }
 #define con_dinitwin32sock() WSACleanup()
 
+#define sleep(x)    Sleep((x)*1000)
 #endif /*linux*/
 
 
@@ -33,7 +34,7 @@ int main(int argc, char *argv[]) {
     pool_new_robot(&pool);
     while(1) {
         if (pool.ncount) {
-            sleep(1000);
+            sleep(1);
             continue;
         }
         break;

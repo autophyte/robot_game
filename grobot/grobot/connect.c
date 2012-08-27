@@ -66,11 +66,11 @@ void con_cconnect(struct cconnect *pcon, void *phost) {
 }
 
 /**
- * 璁剧疆select鐨勬渶澶х殑fd鍙?
+ * 设置select的最大的fd号
  *
- * @param[in] fd 瑕佹牴鍏ㄥ眬鏁版瘮杈冪殑fd鍙?
+ * @param[in] fd 要根全局数比较的fd号
  *
- * @note 杩欎釜鍑芥暟鍥犱负浼氭洿鏀瑰叏灞€鍙橀噺鐨勫€硷紝鍙湪鍦ㄤ富绾跨▼涓皟鐢紝鍏跺畠绾跨▼涓彧璇诲叏灞€鍙橀噺
+ * @note 这个函数因为会更改全局变量的值，只在在主线程中调用，其它线程中只读全局变量
  */
 static void con_set_maxfd(int fd) {
     if (fd >= g_max_select_fd) {
@@ -180,9 +180,9 @@ int con_snd_send(int fd, char *pmsg, _uint nlen) {
 }
 
 /*
- * 浠庢寚瀹氱殑con涓彂閫?涓秷鎭?
+ * 从指定的con中发送1个消息
  *
- * 鏀跺彂娑堟伅绾跨▼涓繍琛?
+ * 收发消息线程中运行
  */
 int con_snd_message(struct cconnect *pcon) {
     int iret;
@@ -200,9 +200,9 @@ int con_snd_message(struct cconnect *pcon) {
 }
 
 /*
- * 浠庢寚瀹氱殑con涓帴鏀?涓秷鎭?
+ * 从指定的con中接收1个消息
  *
- * 鏀跺彂娑堟伅绾跨▼涓繍琛?
+ * 收发消息线程中运行
  */
 int con_rcv_message(struct cconnect *pcon) {
     int iret;
@@ -225,9 +225,9 @@ int con_rcv_message(struct cconnect *pcon) {
 
 
 /*
- * 璋冪敤鍑芥暟锛屼粠鍙帴鍙楁垨鍙彂閫乫d涓婇潰鎺ユ敹銆佸彂閫佹秷鎭?
+ * 调用函数，从可接受或可发送fd上面接收、发送消息
  *
- * 鏀跺彂娑堟伅绾跨▼涓繍琛?
+ * 收发消息线程中运行
  */
 static void con_foreach_fds(void *pool,
     fd_set *pdes, fd_set *psrc, RCVSNDFUN fn) {
@@ -239,9 +239,9 @@ static void con_foreach_fds(void *pool,
     }
 }
 
-/* 鏀跺彂娑堟伅绾跨▼涓诲嚱鏁?
- * 鍑芥暟璐熻矗鎵€鏈夋満鍣ㄤ汉鐨勬秷鎭帴鏀跺拰鍙戦€?
- * 褰撴敹鍒版秷鎭椂锛岄€氱煡鏈哄櫒浜轰富绾跨▼锛屼笉鍚岀殑鏈哄櫒浜轰富绾跨▼瀵瑰簲涓嶅悓鐨剆ocket
+/* 收发消息线程主函数
+ * 函数负责所有机器人的消息接收和发送
+ * 当收到消息时，通知机器人主线程，不同的机器人主线程对应不同的socket
  */
 static void *con_net_man(void *ppool) {
     int ierror;
