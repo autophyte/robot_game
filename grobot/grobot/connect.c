@@ -123,6 +123,18 @@ int con_set_block(struct cconnect *pcon, _uint nonblock) {
     return -1;
 }
 
+/* stop a connect */
+int con_stop_con(struct cconnect *pcon) {
+    int iret = -1;
+    if (pcon) {
+        if (!shutdown(pcon->sockfd, 2)) {
+            iret = 0;
+        }
+    }
+
+    return iret;
+}
+
 int con_create_tcp(struct cconnect *pcon) {
     int iret;
 

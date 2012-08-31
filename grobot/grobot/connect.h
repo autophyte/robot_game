@@ -41,7 +41,7 @@ enum CON_BK{
  */
 struct cconnect {
     void *phost;                /**< the host/parent variable point */
-    int index;                  /**< connect index, the index of array */
+    int index;                  /**< connect index */
 
     /* about net */
     struct sockaddr_in  sa_dst; /**< connect server address */
@@ -183,6 +183,11 @@ int con_create_tcp(struct cconnect *p_con);
  * 处理网络发送接收消息的线程主函数
  */
 static void *con_net_man(void *ppool);
+
+/**
+ * stop a connect
+ */
+int con_stop_con(struct cconnect *pcon);
 
 /*
  * 将收发线程已经收取到的消息取出

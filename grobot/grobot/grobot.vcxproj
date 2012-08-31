@@ -39,9 +39,13 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>D:\Lua\5.1\include;$(IncludePath)</IncludePath>
+    <LibraryPath>D:\Lua\5.1\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
+    <IncludePath>D:\Lua\5.1\include;$(IncludePath)</IncludePath>
+    <LibraryPath>D:\Lua\5.1\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -77,22 +81,27 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="connect.h" />
+    <ClInclude Include="loadcfg.h" />
     <ClInclude Include="loger.h" />
     <ClInclude Include="macrodef.h" />
     <ClInclude Include="msgfun.h" />
     <ClInclude Include="msgpkg.h" />
     <ClInclude Include="msgs.h" />
+    <ClInclude Include="pathstring.h" />
     <ClInclude Include="rbtree.h" />
     <ClInclude Include="robotpool.h" />
     <ClInclude Include="robots.h" />
     <ClInclude Include="translate.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="configs.c" />
     <ClCompile Include="connect.c" />
+    <ClCompile Include="loadcfg.c" />
     <ClCompile Include="loger.c" />
     <ClCompile Include="msgfun.c" />
     <ClCompile Include="msgpkg.c" />
     <ClCompile Include="msgs.c" />
+    <ClCompile Include="pathstring.c" />
     <ClCompile Include="rbtree.c" />
     <ClCompile Include="robot.c" />
     <ClCompile Include="robotpool.c" />

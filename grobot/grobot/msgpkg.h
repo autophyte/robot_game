@@ -24,7 +24,7 @@ void msgpkg_constructor_arr(struct msgpkg *arr, _uint count);
 #define msgpkg_copy(des, src)\
     memcpy((des), (src), sizeof(struct msgpkg))
 
-#define msgpkg_mk_valide(src) do {src.msg_valid = MSGPKG_VALID} while (0)
-#define msgpkg_cl_valide(src) do {src.msg_valid = MSGPKG_INVALID} while (0)
+#define msgpkg_mk_valide(src) src.msg_valid = MSGPKG_VALID
+#define msgpkg_cl_valide(src) src.msg_valid = MSGPKG_INVALID
 
 #endif /*_MSGPKG_H_*/

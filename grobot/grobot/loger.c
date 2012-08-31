@@ -3,46 +3,32 @@
 #include "robots.h"
 #include <stdarg.h>
 
-static char g_sz_local_path[MAX_PATH];
+
+/**
+ * 全局变量：程序所在路径
+ */
+struct pathstring g_path_app;
+struct pathstring g_path_log;
+extern struct pathstring g_path_cfg;
+
+char g_sz_local_path[MAX_PATH];
 
 #ifdef linux
-const char DIR_SPL              = '/';
-const char DIR_CAT[PEND_SIZE]   = "/log/";
 const char DIR_CAT2[PEND_SIZE]  = "log/";
 #elif defined WIN32
-const char DIR_SPL              = '\\';
-const char DIR_CAT[PEND_SIZE]   = "\\log\\";
 const char DIR_CAT2[PEND_SIZE]  = "log\\";
 #endif /*linux*/
+
+
 
 int module_init_log() {
     int iret;
     size_t n_len;
 
-    iret = -1;
-    memset(g_sz_local_path, 0, sizeof(g_sz_local_path) - PEND_SIZE);
-    do {
-        if (NULL==getcwd(g_sz_local_path, sizeof(g_sz_local_path))) {
-            break;
-        }
-
-        n_len = sizeof(g_sz_local_path);
-        /* 因为后面要加上["log\","\log\","/log/","log/"]中1个
-         * 又要加上文件名"log_xxx.log"
-         * 所以要预留1部分空间，保留长度为20
-         */
-        if (n_len>=MAX_PATH - PEND_SIZE) {
-            break;
-        }
-
-        if (DIR_SPL!=g_sz_local_path[n_len-1]) {
-            strcat(g_sz_local_path, DIR_CAT);
-            break;
-        }
-        strcat(g_sz_local_path, DIR_CAT2);
-
-        iret = 0;
-    } while (0);
+    iret = pst_init(&g_path_app);
+    if (!iret) {
+        pst_app_new(g_path_app, DIR_CAT2, g_path_log, iret);
+    }
 
     return iret;
 }

@@ -30,7 +30,7 @@ struct robot {
 
 
 /**
- * 初始化一个机器人
+ * construct a robot
  *
  * @details 初始化一个机器人，包括变量基本设置、以及日志初始化、connect模块初始化、
  *      其它模块初始化
@@ -38,12 +38,22 @@ struct robot {
  * @param[in,out] prob 需要初始化的机器人的指针
  * @param[in] ID 设定机器人的ID号
  * @param[in] index 设定机器人在池中的index
- * @param[in] ip 设定服务器IP地址
- * @param[in] port 设定服务器端口号
  *
  * @see log_init_log con_init_cconnect
  */
-void rob_robot(struct robot *prob, int ID, int idx, const char *ip, _ushort port);
+void rob_robot(struct robot *prob, int ID, int idx);
+
+/**
+ * set robot connect address parameter
+ *
+ * @param[in,out] prob robot point
+ * @param[in] ip server ip address
+ * @param[in] port server port
+ *
+ * @retval 0 function run success
+ * @retval -1 some error occured
+ */
+int rob_set_con(struct robot *prob, const char *ip, _ushort port);
 int rob_start(struct robot *prob);
 
 #endif /* _ROBOTS_H_ */

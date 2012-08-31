@@ -48,6 +48,12 @@
     <ClInclude Include="msgpkg.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="loadcfg.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="pathstring.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="msgfun.c">
@@ -79,6 +85,15 @@
     </ClCompile>
     <ClCompile Include="msgs.c">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="loadcfg.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="pathstring.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="configs.c">
+      <Filter>头文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

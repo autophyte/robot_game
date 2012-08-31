@@ -1,11 +1,7 @@
 ﻿#ifndef _LOGER_H_
 #define _LOGER_H_   1
 
-#include "macrodef.h"
-#include <stdio.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include "pathstring.h"
 
 
 /**

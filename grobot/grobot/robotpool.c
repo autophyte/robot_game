@@ -1,14 +1,5 @@
 ﻿#include "robotpool.h"
 
-/** @def SERVERADDR
- * 定议server端IP地址
- */
-#define SERVERADDR      "127.0.0.1"
-
-/** @def SERVERPORT
- * 定议server端口
- */
-#define SERVERPORT      2208
 
 
 /**
@@ -39,11 +30,11 @@ void pool_robotpool(struct robotpool *ppool) {
         ppool->ids = 0;
         ppool->ncount = 0;
         sem_init(&ppool->sem_ncount, 0, 0);
+        module_init_con(ppool, &ppool->pid_select);
 
         for (i=0; i<MAX_CLIENT; ++i) {
-            rob_robot(&ppool->robots[i], ppool->ids++, i, SERVERADDR, SERVERPORT);
+            rob_robot(&ppool->robots[i], ppool->ids++, i);
         }
-        module_init_con(ppool, &ppool->pid_select);
     }
 }
 
